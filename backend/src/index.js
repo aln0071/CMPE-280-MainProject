@@ -6,12 +6,20 @@ const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
 
-const { uploadFile, getFileStream } = require('./s3')
+const { uploadFile, getFileStream } = require('./s3');
+const { getConnection } = require('./dbconnect');
 
 
 const app = express();
 
 const port = 3001;
+
+getConnection()
+    .then(connection => {
+        console.log(connection);
+    }).catch(error => {
+        console.log(error);
+    })
 
 app.get("/", (req, res) => {
     res.json({

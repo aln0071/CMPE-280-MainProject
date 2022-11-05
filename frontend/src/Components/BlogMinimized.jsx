@@ -11,9 +11,9 @@ function BlogMinimized(props) {
             <Card.Header>{props.blog.topic}</Card.Header>
             <Card.Body>
                 <Card.Text>
-                {props.blog.description}
+                    {/* <EditorCustom description={blog.description} color="#F6F0F6"></EditorCustom> */}
                 </Card.Text>
-                <Button variant="primary">Go somewhere</Button>
+                <Button variant="primary">View Blog</Button>
             </Card.Body>
             </Card>
         </div>)

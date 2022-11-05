@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import BlogMinimized from "./BlogMinimized";
+import Background from "./Background";
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
@@ -9,19 +10,19 @@ function HomepageListing() {
 
   const [blogList, setblogList] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
       var api="http://localhost:3001/getAllBlogs"
       axios.get(api).then(response => {setblogList(response.data)})
       },[])
 
-  return (
+  return (<div><Background/>
     <Row xs={1} md={2} className="g-4 m-5 p-5">
       {blogList.map((blog) => (
         <Col>
         <BlogMinimized blog={blog}/>
         </Col>
       ))}
-    </Row>
+    </Row></div>
   );
 }
 

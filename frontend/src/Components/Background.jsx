@@ -17,12 +17,14 @@ export default function Background(props) {
       await console.log(container);
   }, []);
 
+  {console.log(props.color)}
   return (       
       <Particles
               id="tsparticles"
               init={particlesInit}
               loaded={particlesLoaded}
               options={{
+                  fullScreen: true,
                   background: {
                       color: {
                           value: "#EDE1ED",

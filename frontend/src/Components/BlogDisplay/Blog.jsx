@@ -1,4 +1,5 @@
 import React, { useState,useEffect } from "react";
+import {useParams} from "react-router-dom";
 import EditorCustom from './BlogReadOnly';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -7,13 +8,13 @@ import axios from 'axios';
 import Background from "../Background";
 
 function BlogEdit(props) {
-
+    let params = useParams();
     const [blog, setblogList] = useState([]);
     const [error,setError] = useState("");
     const [imageArray, setImage] = useState([]);
 
   useEffect(() => {
-    var api="http://localhost:3001/getBlog/6365d0890c9c0f3992068075"
+    var api="http://localhost:3001/getBlog/"+params.id
     axios.get(api).then(response => {setblogList(response.data)})
     },[])
   

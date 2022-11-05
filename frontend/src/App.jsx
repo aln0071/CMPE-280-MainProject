@@ -28,7 +28,7 @@ function App() {
           <Route path="/createBlog" element={<BlogEdit />} />
           <Route path="/blogListing" element={<BlogListing />} />
           <Route path="/home" element={<HompageListing />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<Blog />} />
           <Route exact path="/" element={<Blog />} />
           <Route exact element={Error} />
         </Routes>

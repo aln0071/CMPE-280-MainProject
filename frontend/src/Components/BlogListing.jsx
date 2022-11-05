@@ -5,16 +5,16 @@ import axios from 'axios';
 function BlogEdit(props) {
 
     const [blogList, setblogList] = useState([]);
-    // useEffect(() => {
-    //       axios.post(""",payload)
-    //       .then(response => {setblogList(response.data.data)})
-    //     })
+    useEffect(() => {
+        var api="http://localhost:3001/getAllBlogs"
+        axios.get(api).then(response => {setblogList(response.data)})
+        },[])
   
     return(<div>
-        {[1,2,3,4,5].map((question) =>
+        {blogList.map((blog) =>
         {  
-            return (<div key={question}><hr />
-            <BlogMinimized questions={question} />
+            return (<div key={blog._id}><hr />
+            <BlogMinimized blog={blog} />
             </div>)
         })}
         </div>)

@@ -4,16 +4,24 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-function GridExample() {
+function HomepageListing() {
+
+  const [blogList, setblogList] = useState([]);
+
+  useEffect(() => {
+      var api="http://localhost:3001/getAllBlogs"
+      axios.get(api).then(response => {setblogList(response.data)})
+      },[])
+
   return (
     <Row xs={1} md={2} className="g-4 m-5 p-5">
-      {Array.from({ length: 4 }).map((_, idx) => (
+      {blogList.map((blog) => (
         <Col>
-        <BlogMinimized />
+        <BlogMinimized blog={blog}/>
         </Col>
       ))}
     </Row>
   );
 }
 
-export default GridExample;
+export default HomepageListing;

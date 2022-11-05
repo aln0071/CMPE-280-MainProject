@@ -23,23 +23,22 @@ function BlogEdit(props) {
         if(!trim(descripiton) || !trim(e.target.formBasicTitle.value)){
         setError("Please Enter a valid Title and Description !")
         }
-        // else{
-        // var payload ={
-        //   user: decoded._id,
-        //   title: e.target.formBasicTitle.value,
-        //   description: descripiton,
-        //   tags:selectedTags,
-        //   images:imageArray
-        //   // userId: question.user._id
-        // }
-        // var api="api/questions/add"
-        //   authapi.post(api,payload).then(response => {
-        //     console.log(response.data);
-        //     console.log(response.data.result);
-        //   var path = "/question/"+response.data.result
-        //   navigate(path)
-        //   })
-        // }
+        else{
+        var payload ={
+            topic:e.target.formBasicTitle.value,
+            description: descripiton,
+            author: "Snigdha Chaturvedi",
+            annonymusFlag: false,
+            tags:[],
+            comments:[]
+            }
+        
+        var api="http://localhost:3001/createBlog"
+          axios.post(api,payload).then(response => {
+            console.log(response.data);
+            console.log(response.data.result);
+          })
+        }
     }
   
     return(<div><Background/>

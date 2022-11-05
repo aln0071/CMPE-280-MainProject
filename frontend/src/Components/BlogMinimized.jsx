@@ -8,11 +8,10 @@ function BlogMinimized(props) {
   
     return(<div>
             <Card style={{ width: '40rem'}}>
-            <Card.Header>Featured</Card.Header>
+            <Card.Header>{props.blog.topic}</Card.Header>
             <Card.Body>
-                <Card.Title>Special title treatment</Card.Title>
                 <Card.Text>
-                With supporting text below as a natural lead-in to additional content.
+                {props.blog.description}
                 </Card.Text>
                 <Button variant="primary">Go somewhere</Button>
             </Card.Body>

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
 import HompageListing from './Components/HompageListing';
+import Blog from './Components/BlogDisplay/Blog';
 import './App.css';
 import TopNavbar from "./Components/TopNavbar";
 import Container from "react-bootstrap/esm/Container";
@@ -27,7 +28,8 @@ function App() {
           <Route path="/createBlog" element={<BlogEdit />} />
           <Route path="/blogListing" element={<BlogListing />} />
           <Route path="/home" element={<HompageListing />} />
-          <Route exact path="/" element={<BlogEdit />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route exact path="/" element={<Blog />} />
           <Route exact element={Error} />
         </Routes>
       </Container>

@@ -12,3 +12,15 @@
 .m-5 {
   margin: 5rem;
 }
+
+.headingTitle {
+  font-size: 3rem;
+  font-family: fangsong !important;
+  border: none !important;
+  text-align: center !important;
+  background-color: #F6F0F6 !important;
+}
+
+.cardBack{
+  background-color: #F6F0F6 !important;
+}

@@ -45,19 +45,20 @@ function BlogEdit(props) {
         <div style={{ marginTop: '10rem'}}>
         <center>
         <Form onSubmit={submitHandler}>
-            <Card style={{ width: '70rem', align:'center' }}> 
+            <Card className="cardBack" style={{ width: '70rem', align:'center' }}> 
             <Card.Body>
                 <Card.Title>
                     <br></br>
                     <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
                         <Form.Control type="text" 
+                        className="headingTitle"
                         style={{"font-size": "3rem"}}
                         placeholder="Blog Title" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Text className="text-muted">
                         <Form.Label>Publish annonymusly?</Form.Label>
-                        <Form.Check type="checkbox"/>
+                        <Form.Check type="checkbox"  style={{display:'inline',marginLeft:'1rem' }}/>
                     </Form.Text>
                     </Form.Group>
                 </Card.Title>
@@ -69,7 +70,9 @@ function BlogEdit(props) {
                         {error}
                     </div>}
                 </Card.Text>
-                <Button variant="primary" type="submit" style={{'marginTop':"2rem"}}>
+                <Button variant="primary" type="submit" style={{'marginTop':"2rem",
+                    "background-color": "#B6A6B6",
+                    width: "20rem"}}>
                     Publish
                 </Button>
                     <br></br>

@@ -11,6 +11,7 @@ function BlogEdit(props) {
     const[descripiton,setDescription]=useState("")
     const [imageArray, setImage] = useState([]);
     const [error,setError] = useState("");
+    const[annon,setAnnon]= React.useState(false);
 
     const trim=(x)=>{
         return x.replace(/^\s+|\s+$/gm, '');
@@ -28,7 +29,7 @@ function BlogEdit(props) {
             topic:e.target.formBasicTitle.value,
             description: descripiton,
             author: "Snigdha Chaturvedi",
-            annonymusFlag: false,
+            annonymusFlag: e.target.formBasicCheckbox.checked,
             tags:[],
             comments:[]
             }

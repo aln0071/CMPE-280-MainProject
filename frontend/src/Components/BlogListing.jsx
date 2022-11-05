@@ -13,7 +13,7 @@ function BlogEdit(props) {
     return(<div>
         {blogList.map((blog) =>
         {  
-            return (<div key={blog._id}><hr />
+            return (<div key={blog._id}>
             <BlogMinimized blog={blog} />
             </div>)
         })}

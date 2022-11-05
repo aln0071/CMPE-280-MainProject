@@ -34,7 +34,9 @@ function BlogEdit(props) {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                     <Form.Text className="text-muted">
-                        <Form.Label>- {blog.author}</Form.Label>
+                        <Form.Label>- 
+                        {blog.annonymusFlag?"Annon":blog.author}
+                        </Form.Label>
                     </Form.Text>
                     </Form.Group>
                 </Card.Title>

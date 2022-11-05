@@ -75,7 +75,7 @@ return new Promise(resolve => {
         ref={mdEditor}
         value={value}
         style={{
-          height: props.height||"50rem"
+          height: props.height||"30rem"
         }}
         onChange={handleEditorChange}
         onImageUpload={onImageUpload}

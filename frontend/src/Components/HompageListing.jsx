@@ -16,7 +16,7 @@ function HomepageListing() {
       },[])
 
   return (<div><Background/>
-    <Row xs={1} md={2} className="g-4 m-5 p-5">
+    <Row xs={1} md={2} className="m-3 p-5">
       {blogList.map((blog) => (
         <Col>
         <BlogMinimized blog={blog}/>

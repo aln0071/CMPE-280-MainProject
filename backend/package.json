@@ -10,8 +10,7 @@
     "format:write": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint": "eslint --fix",
-    "prepare": "cd ../ && husky install"
+    "lint": "eslint --fix"
   },
   "repository": {
     "type": "git",

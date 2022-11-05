@@ -18,9 +18,17 @@
   font-family: fangsong !important;
   border: none !important;
   text-align: center !important;
-  background-color: #F6F0F6 !important;
+  background-color: #f6f0f6 !important;
 }
 
-.cardBack{
-  background-color: #F6F0F6 !important;
+.cardBack {
+  background-color: #f6f0f6 !important;
+}
+
+.topNavBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
 }

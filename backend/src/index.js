@@ -2,7 +2,6 @@ const express = require('express');
 const async = require("async");
 const multer = require('multer')
 const upload = multer({ dest: 'uploads/' })
-const mongoose = require('mongoose');
 
 const fs = require('fs')
 const util = require('util')
@@ -19,34 +18,6 @@ const app = express();
 var cors = require("cors");
 app.use(cors());
 app.use(express.json());
-
-// const mongoURI ="mongodb+srv://SnigdhaAWSMongo:AWSPa$$wordMongo@cluster0.fj6vo.mongodb.net/CMPE280?retryWrites=true&w=majority";
-// let options = {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   maxPoolSize: 500,
-//   wtimeoutMS: 2500,
-// };
-// mongoose.connect(mongoURI, options, (err, res) => {
-//     if (err) {
-//       console.log(err);
-//       console.log(`MongoDB Connection Failed`);
-//     }
-//   });
-
-// mongoose.connection.on("connected", () => {
-//   console.log(
-//     "connecting to mongoDB...and the readyState is",
-//     mongoose.connection.readyState
-//   );
-// });
-
-// mongoose.connection.on("error", () => {
-//   console.log(
-//     "disconnecting to mongoDB...and the readyState is",
-//     mongoose.connection.readyState
-//   );
-// });
 
 const port = 3001;
 

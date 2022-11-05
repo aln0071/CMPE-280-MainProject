@@ -64,7 +64,7 @@ function BlogEdit(props) {
                 </Card.Title>
                 <Card.Text>
                     <br></br>
-                    <EditorCustom setDescription={setDescription} setImage={setImage}></EditorCustom>
+                    <EditorCustom setDescription={setDescription} setImage={setImage} color="#EDE1ED"></EditorCustom>
                     <br></br>      
                     {error && <div style={{color: "red"}}>
                         {error}

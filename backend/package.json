@@ -10,8 +10,7 @@
     "format:write": "prettier --write .",
     "lint:check": "eslint .",
     "lint:fix": "eslint --fix .",
-    "lint": "eslint --fix",
-    "prepare": "cd ../ && husky install"
+    "lint": "eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -27,7 +26,9 @@
   },
   "homepage": "https://github.com/aln0071/CMPE-280-MainProject#readme",
   "dependencies": {
+    "async": "^3.2.4",
     "aws-sdk": "^2.1243.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.1",
     "mongoose": "^6.7.0",

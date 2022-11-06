@@ -86,14 +86,14 @@ export function Form() {
         placeholder="Enter your password"
         type="password"
         value={password}
-        onChange={onChangePassword2}
+        onChange={onChangePassword}
       />
       <FormInput
         description="Password"
         placeholder="Re-enter your password"
         type="password"
-        value={password}
-        onChange={onChangePassword}
+        value={password2}
+        onChange={onChangePassword2}
       />
       <FormButton title="Submit" onSubmit={handleRegister} />
     </div>

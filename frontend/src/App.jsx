@@ -1,30 +1,34 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Container from 'react-bootstrap/esm/Container';
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
 import HompageListing from './Components/HompageListing';
 import Blog from './Components/BlogDisplay/Blog';
 import './App.css';
-import TopNavbar from "./Components/TopNavbar";
-import Container from "react-bootstrap/esm/Container";
+import TopNavbar from './Components/TopNavbar';
+import LoginForm from './Components/Login/Login';
+import RegisterForm from './Components/Login/Register';
+
 
 function App() {
   const navbarRef = React.useRef(null);
   const [offsetTop, setOffsetTop] = React.useState(0);
   React.useEffect(() => {
-    if(navbarRef.current) {
-      setOffsetTop(navbarRef.current.getBoundingClientRect().height)
+    if (navbarRef.current) {
+      setOffsetTop(navbarRef.current.getBoundingClientRect().height);
     }
-  }, [navbarRef])
+  }, [navbarRef]);
   return (
     <div>
       <TopNavbar navRef={navbarRef} />
       <Container
         style={{
           paddingTop: `${offsetTop}px`
-        }}
-      >
+        }}>
         <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route path="/createBlog" element={<BlogEdit />} />
           <Route path="/blogListing" element={<BlogListing />} />
           <Route path="/home" element={<HompageListing />} />

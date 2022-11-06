@@ -94,4 +94,22 @@ app.post('/createBlog', async (req, res) => {
 
   });
 
+  app.post('/register', async (req, res) => {
+    const {  username, email, password } =req.body;
+    const query = {
+        username,
+        email,
+        password
+    };
+    
+    const user = new userModel(query);
+    let result = await user.save().then(user => {
+        res.status( 200 ).json( user )
+      })
+      .catch( error => {
+        res.status( 400 ).send( error )
+      }) 
+
+  });
+
 app.listen(port, () => console.log("[backend] listening on port " + port));

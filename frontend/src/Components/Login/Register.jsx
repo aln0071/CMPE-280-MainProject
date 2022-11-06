@@ -49,7 +49,7 @@ export function Form() {
 
     setSuccessful(false);
 
-    if (password!==password2){
+    if (password !== password2) {
         alert("Passwords dont match")
     }
     // form.current.validateAll();
@@ -95,7 +95,7 @@ export function Form() {
         value={password2}
         onChange={onChangePassword2}
       />
-      <FormButton title="Submit" onSubmit={handleRegister} />
+      <FormButton title="Register" onSubmit={handleRegister} />
     </div>
   );
 }

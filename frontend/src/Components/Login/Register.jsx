@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { register } from '../../actions/auth';
 import { FormHeader, FormInput, AltLink, OtherMethods, FormButton } from './Login';
@@ -16,7 +16,6 @@ export default function RegisterForm() {
   );
 }
 export function Form() {
-  const navigate = useNavigate();
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -40,9 +39,7 @@ export function Form() {
   };
 
   const onChangePassword2 = (e) => {
-    if (e.target.value !== password) {
-        setPassword2(e.target.value);
-    }
+    setPassword2(e.target.value);
   };
   const handleRegister = (e) => {
     e.preventDefault();
@@ -51,6 +48,7 @@ export function Form() {
 
     if (password !== password2) {
         alert("Passwords dont match")
+        return;
     }
     // form.current.validateAll();
 

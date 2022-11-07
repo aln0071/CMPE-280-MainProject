@@ -15,7 +15,6 @@ export default function TopNavbar({navRef}) {
                         <Nav.Link href="/#/home">Home</Nav.Link>
                         <Nav.Link href="/#/createBlog">Create Blog</Nav.Link>
                         <Nav.Link href="/#/blogListing">Blog Listing</Nav.Link>
-                        <Nav.Link href="/#/blog">Blog </Nav.Link>
                     </Nav>
                 </Container>
             </Navbar></div>

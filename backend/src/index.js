@@ -23,7 +23,7 @@ const port = 3001;
 
 getConnection()
     .then(connection => {
-        console.log(connection);
+        // console.log(connection);
     }).catch(error => {
         console.log(error);
     })

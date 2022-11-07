@@ -4,6 +4,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './src/index.js',
   mode: 'development',
+  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -34,6 +35,5 @@ module.exports = {
     },
     hot: true,
     liveReload: true
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  }
 };

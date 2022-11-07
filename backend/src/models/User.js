@@ -4,6 +4,9 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: { type: String},
+    username: { type: String },
+    password: { type : String },
+    email: { type: String },
     bookmarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",

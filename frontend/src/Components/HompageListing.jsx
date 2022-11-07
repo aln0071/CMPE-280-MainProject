@@ -1,7 +1,6 @@
 import React, { useState,useEffect } from "react";
 import BlogMinimized from "./BlogMinimized";
 import Background from "./Background";
-import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import axios from "axios";
@@ -18,7 +17,7 @@ function HomepageListing() {
   return (<div><Background/>
     <Row xs={1} md={2} className="m-3 p-5">
       {blogList.map((blog) => (
-        <Col>
+        <Col key={blog._id}>
         <BlogMinimized blog={blog}/>
         </Col>
       ))}

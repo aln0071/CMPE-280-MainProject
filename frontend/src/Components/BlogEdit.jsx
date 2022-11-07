@@ -72,7 +72,7 @@ function BlogEdit(props) {
                     </div>}
                 </Card.Text>
                 <Button variant="primary" type="submit" style={{'marginTop':"2rem",
-                    "background-color": "#B6A6B6",
+                    "backgroundColor": "#B6A6B6",
                     width: "20rem"}}>
                     Publish
                 </Button>

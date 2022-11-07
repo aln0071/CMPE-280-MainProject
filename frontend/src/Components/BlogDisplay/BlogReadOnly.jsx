@@ -23,10 +23,10 @@ export default function EditorCustom(props) {
       {props && props.description &&
       <Card style={{margin:"1rem"}}>
       <div id="editor-container" style={{"textAlign":"left",
-    "background-color": props.color,
-    "border-style": "none",
-    "overflow-x": "hidden",
-    "overflow-y": "hidden"}}>
+    "backgroundColor": props.color,
+    "borderStyle": "none",
+    "overflowX": "hidden",
+    "overflowY": "hidden"}}>
       </div>
       </Card>}
     </div>

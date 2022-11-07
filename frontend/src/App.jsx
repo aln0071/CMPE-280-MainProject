@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Container from 'react-bootstrap/esm/Container';
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
@@ -27,14 +27,13 @@ function App() {
           paddingTop: `${offsetTop}px`
         }}>
         <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/createBlog" element={<BlogEdit />} />
-          <Route path="/blogListing" element={<BlogListing />} />
-          <Route path="/home" element={<HompageListing />} />
-          <Route path="/blog/:id" element={<Blog />} />
-          <Route exact path="/" element={<Blog />} />
-          <Route exact element={Error} />
+          <Route exact path="/login" element={<LoginForm />} />
+          <Route exact path="/register" element={<RegisterForm />} />
+          <Route exact path="/createBlog" element={<BlogEdit />} />
+          <Route exact path="/blogListing" element={<BlogListing />} />
+          <Route exact path="/home" element={<HompageListing />} />
+          <Route exact path="/blog/:id" element={<Blog />} />
+          <Route path="/*" element={<Navigate to="/home" replace={true} />} />
         </Routes>
       </Container>
     </div>

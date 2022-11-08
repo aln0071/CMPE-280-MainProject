@@ -9,7 +9,8 @@ import './App.css';
 import TopNavbar from './Components/TopNavbar';
 import LoginForm from './Components/Login/Login';
 import RegisterForm from './Components/Login/Register';
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const navbarRef = React.useRef(null);
@@ -36,6 +37,18 @@ function App() {
           <Route path="/*" element={<Navigate to="/home" replace={true} />} />
         </Routes>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

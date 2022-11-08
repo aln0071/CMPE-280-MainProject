@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
 import './Login.css';
 import { register } from '../../actions/auth';
 import { FormHeader, FormInput, AltLink, OtherMethods, FormButton } from './Login';
@@ -17,11 +18,12 @@ export default function RegisterForm() {
 }
 export function Form() {
 
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
-  const [successful, setSuccessful] = useState(false);
 
   const { message } = useSelector(state => state.message);
   const dispatch = useDispatch();
@@ -44,23 +46,19 @@ export function Form() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    setSuccessful(false);
-
     if (password !== password2) {
         alert("Passwords dont match")
         return;
     }
-    // form.current.validateAll();
 
-    // if (checkBtn.current.context._errors.length === 0) {
     dispatch(register(username, email, password))
       .then(() => {
-        setSuccessful(true);
+        toast.success('User registered successfully');
+        navigate('/login')
       })
       .catch(() => {
-        setSuccessful(false);
+        toast.error('User registration failed');
       });
-    // }
   };
 
   return (

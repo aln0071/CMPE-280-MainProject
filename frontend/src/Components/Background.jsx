@@ -35,7 +35,7 @@ export default function Background(props) {
           events: {
             onClick: {
               enable: true,
-              mode: 'push'
+              mode: 'none'
             },
             onHover: {
               enable: true,

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import Container from 'react-bootstrap/esm/Container';
+import { ToastContainer } from 'react-toastify';
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
 import HompageListing from './Components/HompageListing';
@@ -9,7 +10,6 @@ import './App.css';
 import TopNavbar from './Components/TopNavbar';
 import LoginForm from './Components/Login/Login';
 import RegisterForm from './Components/Login/Register';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -26,7 +26,8 @@ function App() {
       <Container
         style={{
           paddingTop: `${offsetTop}px`
-        }}>
+        }}
+      >
         <Routes>
           <Route exact path="/login" element={<LoginForm />} />
           <Route exact path="/register" element={<RegisterForm />} />
@@ -34,7 +35,7 @@ function App() {
           <Route exact path="/blogListing" element={<BlogListing />} />
           <Route exact path="/home" element={<HompageListing />} />
           <Route exact path="/blog/:id" element={<Blog />} />
-          <Route path="/*" element={<Navigate to="/home" replace={true} />} />
+          <Route path="/*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Container>
       <ToastContainer

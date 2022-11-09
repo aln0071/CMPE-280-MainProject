@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Container from 'react-bootstrap/esm/Container';
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
@@ -53,8 +53,7 @@ function App() {
           <Route path="/blogListing" element={<BlogListing />} />
           <Route path="/home" element={<HompageListing />} />
           <Route path="/blog/:id" element={<Blog />} />
-          <Route exact path="/" element={<Blog />} />
-          <Route exact element={Error} />
+          <Route exact path="/*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Container>
       <ToastContainer

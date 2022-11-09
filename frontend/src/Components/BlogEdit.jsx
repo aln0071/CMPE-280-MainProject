@@ -53,7 +53,7 @@ function BlogEdit(props) {
                     <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
                         <Form.Control type="text" 
                         className="headingTitle"
-                        style={{"font-size": "3rem"}}
+                        style={{"fontSize": "3rem"}}
                         placeholder="Blog Title" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -72,7 +72,7 @@ function BlogEdit(props) {
                     </div>}
                 </Card.Text>
                 <Button variant="primary" type="submit" style={{'marginTop':"2rem",
-                    "background-color": "#B6A6B6",
+                    "backgroundColor": "#B6A6B6",
                     width: "20rem"}}>
                     Publish
                 </Button>

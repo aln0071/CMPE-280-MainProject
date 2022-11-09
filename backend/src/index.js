@@ -22,6 +22,7 @@ const userModel = require("./models/user.js");
 
 const app = express();
 var cors = require("cors");
+const { authMiddleware } = require('./authMiddleware');
 app.use(cors());
 app.use(express.json());
 
@@ -175,5 +176,11 @@ app.post('/login', async (req, res) => {
     console.log(err);
   }
 });
+
+app.get('/test', authMiddleware, async (req, res) => {
+  res.status(200).json({
+    Authenticated: true
+  })
+})
 
 app.listen(port, () => console.log("[backend] listening on port " + port));

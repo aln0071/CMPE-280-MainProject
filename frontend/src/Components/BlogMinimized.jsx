@@ -20,7 +20,7 @@ function BlogMinimized(props) {
                     {/* <EditorCustom description={blog.description} color="#F6F0F6"></EditorCustom> */}
                 </Card.Text>
                 <Button key={props.blog._id} onClick={blogdisplay} style={{'marginLeft':"3rem",
-                    "background-color": "#F6F0F6",
+                    backgroundColor: "#F6F0F6",
                     width: "20rem",
                     color: "black"}}>View Blog</Button>
             </Card.Body>

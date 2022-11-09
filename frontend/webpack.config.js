@@ -34,6 +34,5 @@ module.exports = {
     },
     hot: true,
     liveReload: true
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  }
 };

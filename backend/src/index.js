@@ -1,3 +1,5 @@
+
+require('dotenv').config();
 const express = require('express');
 const async = require("async");
 const multer = require('multer')
@@ -6,6 +8,10 @@ const upload = multer({ dest: 'uploads/' })
 const fs = require('fs')
 const util = require('util')
 const unlinkFile = util.promisify(fs.unlink)
+const jwt = require("jsonwebtoken");
+const tokenKey = process.env.TOKEN_KEY || 'cmpe280_jwt_token_key';
+const bcrypt = require("bcryptjs");
+
 
 const { uploadFile, getFileStream } = require('./s3');
 const { getConnection } = require('./dbconnect');
@@ -96,20 +102,77 @@ app.post('/createBlog', async (req, res) => {
 
   app.post('/register', async (req, res) => {
     const {  username, email, password } =req.body;
+    // console.log(username, email, password);
+    const user = await userModel.find({ $or:[{ username: username }, {email:email}]});
+
+    if (user) {
+      res.status(400).send("User Exists");
+    }
+
+    const encryptedPassword = await bcrypt.hash(password, 10);
+    console.log(encryptedPassword)
     const query = {
-        username,
-        email,
-        password
+        username: username,
+        email:email,
+        password: encryptedPassword
     };
-    
-    const user = new userModel(query);
-    let result = await user.save().then(user => {
-        res.status( 200 ).json( user )
+
+    newUser = new userModel(query);
+    let result = await newUser.save().then(newUser => {
+        const token = jwt.sign(
+            { user_id: newUser._id, email },
+            tokenKey,
+            {
+              expiresIn: "2h",
+            }
+          );
+          // save user token
+
+          newUser.token = token;
+        res.status( 200 ).json( newUser )
       })
       .catch( error => {
+        console.log(error)
         res.status( 400 ).send( error )
       }) 
 
   });
+
+  app.post('/login', async (req, res) =>{
+    const {  username, password } =req.body;
+    try {
+      // Get user input
+      const { username, password } = req.body;
+  
+      // Validate user input
+      if (!(username && password)) {
+        res.status(400).send("All input is required");
+      }
+      // Validate if user exist in our database
+      const user = await userModel.findOne({ username: username });
+  
+      if (user && (await bcrypt.compare(password, user.password))) {
+        // Create token
+        const token = jwt.sign(
+          { user_id: user._id, username: user.username },
+          tokenKey,
+          {
+            expiresIn: "2h",
+          }
+        );
+  
+        // save user token
+        user.token = token;
+  
+        // user
+        res.status(200).json(user);
+      }
+      else{
+      res.status(400).send("Invalid Credentials");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+    });
 
 app.listen(port, () => console.log("[backend] listening on port " + port));

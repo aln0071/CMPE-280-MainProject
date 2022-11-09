@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import './Login.css';
 import { register } from '../../actions/auth';
-import { FormHeader, FormInput, AltLink, OtherMethods, FormButton } from './Login';
+import {
+ FormHeader, FormInput, AltLink, OtherMethods, FormButton 
+} from './Login';
 
 export default function RegisterForm() {
   return (
@@ -24,7 +26,7 @@ export function Form() {
   const [password2, setPassword2] = useState('');
   const [successful, setSuccessful] = useState(false);
 
-  const { message } = useSelector(state => state.message);
+  const { message } = useSelector((state) => state.message);
   const dispatch = useDispatch();
 
   const onChangeUsername = (e) => {
@@ -40,9 +42,7 @@ export function Form() {
   };
 
   const onChangePassword2 = (e) => {
-    if (e.target.value !== password) {
-        setPassword2(e.target.value);
-    }
+    setPassword2(e.target.value);
   };
   const handleRegister = (e) => {
     e.preventDefault();
@@ -50,7 +50,7 @@ export function Form() {
     setSuccessful(false);
 
     if (password !== password2) {
-        alert("Passwords dont match")
+      alert('Passwords dont match');
     }
     // form.current.validateAll();
 

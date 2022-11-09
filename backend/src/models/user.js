@@ -15,6 +15,7 @@ const userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",
       }],
+    token: { type: String }
 });
 
 const userModel = mongoose.model("user",userSchema);

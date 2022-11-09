@@ -66,6 +66,7 @@ export const login = (username, password) => (dispatch) => AuthService.login(use
   );
 
 export const logout = () => (dispatch) => {
+  console.log("inside logout")
   AuthService.logout();
 
   dispatch({

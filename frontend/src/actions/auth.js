@@ -4,66 +4,56 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_MESSAGE
 } from './types';
 
 import AuthService from '../services/auth.service';
+import { MESSAGE_TYPE } from '../reducers/message';
+import { MESSAGE } from './messages';
 
 export const register = (username, email, password) => (dispatch) => AuthService.register(username, email, password).then(
-    (response) => {
-      dispatch({
-        type: REGISTER_SUCCESS
-      });
+  (response) => {
+    dispatch({
+      type: REGISTER_SUCCESS
+    });
 
-      dispatch({
-        type: SET_MESSAGE,
-        payload: response.data.message
-      });
+    dispatch(MESSAGE.success("User registered successfully"))
 
-      return Promise.resolve();
-    },
-    (error) => {
-      const message = error.response && error.response.data && error.response.data.message;
-      error.message || error.toString();
+    return Promise.resolve();
+  },
+  (error) => {
+    const message = error?.response?.data?.message || error?.response?.data || error?.message || error?.toString() || '';
 
-      dispatch({
-        type: REGISTER_FAIL
-      });
+    dispatch({
+      type: REGISTER_FAIL
+    });
 
-      dispatch({
-        type: SET_MESSAGE,
-        payload: message
-      });
+    dispatch(MESSAGE.error(message));
 
-      return Promise.reject();
-    }
-  );
+    return Promise.reject();
+  }
+);
 
 export const login = (username, password) => (dispatch) => AuthService.login(username, password).then(
-    (data) => {
-      dispatch({
-        type: LOGIN_SUCCESS,
-        payload: { user: data }
-      });
+  (data) => {
+    dispatch({
+      type: LOGIN_SUCCESS,
+      payload: { user: data }
+    });
 
-      return Promise.resolve();
-    },
-    (error) => {
-      const message = error.response && error.response.data && error.response.data.message;
-      error.message || error.toString();
+    return Promise.resolve();
+  },
+  (error) => {
+    const message = error?.response?.data?.message || error?.response?.data || error?.message || error?.toString() || '';
 
-      dispatch({
-        type: LOGIN_FAIL
-      });
+    dispatch({
+      type: LOGIN_FAIL
+    });
 
-      dispatch({
-        type: SET_MESSAGE,
-        payload: message
-      });
+    dispatch(MESSAGE.error(message));
 
-      return Promise.reject();
-    }
-  );
+    return Promise.reject();
+  }
+);
 
 export const logout = () => (dispatch) => {
   console.log("inside logout")

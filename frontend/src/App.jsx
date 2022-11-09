@@ -9,6 +9,10 @@ import './App.css';
 import TopNavbar from './Components/TopNavbar';
 import LoginForm from './Components/Login/Login';
 import RegisterForm from './Components/Login/Register';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useSelector } from 'react-redux';
+import { MESSAGE_TYPE } from './reducers/message';
 
 
 function App() {
@@ -19,6 +23,22 @@ function App() {
       setOffsetTop(navbarRef.current.getBoundingClientRect().height);
     }
   }, [navbarRef]);
+  const message = useSelector(state => state.message);
+  React.useEffect(() => {
+    if (JSON.stringify(message) !== '{}') {
+      switch(message.type) {
+        case MESSAGE_TYPE.ERROR:
+          toast.error(message.message);
+          break;
+        case MESSAGE_TYPE.SUCCESS:
+          toast.success(message.message);
+          break;
+        case MESSAGE_TYPE.INFO:
+          toast.info(message.message);
+          break;
+      }
+    }
+  }, [message])
   return (
     <div>
       <TopNavbar navRef={navbarRef} />
@@ -37,6 +57,18 @@ function App() {
           <Route exact element={Error} />
         </Routes>
       </Container>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }

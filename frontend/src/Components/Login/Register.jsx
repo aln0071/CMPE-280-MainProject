@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Login.css';
 import { register } from '../../actions/auth';
 import {
- FormHeader, FormInput, AltLink, OtherMethods, FormButton 
+  FormHeader, FormInput, AltLink, OtherMethods, FormButton
 } from './Login';
+import { MESSAGE } from '../../actions/messages';
 
 export default function RegisterForm() {
   return (
@@ -47,22 +48,18 @@ export function Form() {
   const handleRegister = (e) => {
     e.preventDefault();
 
-    setSuccessful(false);
-
     if (password !== password2) {
-      alert('Passwords dont match');
+      dispatch(MESSAGE.error("Passwords does not match"))
+      return;
     }
-    // form.current.validateAll();
 
-    // if (checkBtn.current.context._errors.length === 0) {
     dispatch(register(username, email, password))
       .then(() => {
-        setSuccessful(true);
+        navigate('/login')
       })
-      .catch(() => {
-        setSuccessful(false);
+      .catch((e) => {
+        console.log(e)
       });
-    // }
   };
 
   return (

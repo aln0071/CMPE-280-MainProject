@@ -6,7 +6,6 @@ import MarkdownIt from 'markdown-it';
 
 
 export default function EditorCustom(props) {
-  const [description, setDescription] = React.useState("")
   const mdParser = new MarkdownIt(/* Markdown-it options */);
   var arr;
 

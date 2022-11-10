@@ -225,9 +225,12 @@ app.post('/comment/:blogid', async (req, res, next) => {
   saveComment();
 })
 
-app.get('/comment/:blogid', async (req, res) => {
+app.get('/comments/:blogid', async (req, res) => {
   const blogId = req.params.blogid;
-  const comments = await commentModel.find({ blogId }).sort({ createdAt: 'descending' });
+  const comments = await commentModel
+    .find({ blogId })
+    .sort({ createdAt: 'descending' })
+    .populate("userId", "username");
   res.json(comments);
 })
 

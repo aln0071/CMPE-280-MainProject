@@ -1,0 +1,17 @@
+.comment-container {
+    border: 1px solid rgb(143, 138, 138);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0px;
+    font-size: 14px;
+}
+
+.comment-author {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.comment-time {
+    font-size: 12px;
+    padding-bottom: 5px;
+}

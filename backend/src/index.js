@@ -23,6 +23,7 @@ const userModel = require("./models/user.js");
 const app = express();
 var cors = require("cors");
 const { authMiddleware } = require('./authMiddleware');
+const blogPostModel = require('./models/blogPost.js');
 app.use(cors());
 app.use(express.json());
 
@@ -181,6 +182,53 @@ app.get('/test', authMiddleware, async (req, res) => {
   res.status(200).json({
     Authenticated: true
   })
+})
+
+app.post('/comment/:blogid', async (req, res, next) => {
+  const blogId = req.params.blogid;
+  try {
+    const blog = await blogPostModel.findById(blogId)
+  } catch (error) {
+    return res.status(400).send("Invalid blog id");
+  }
+  const description = req.body.comment;
+  const query = {
+    blogId,
+    description
+  }
+
+  const saveComment = async () => {
+    const comment = new commentModel(query);
+    await comment
+      .save()
+      .then(response => {
+        res.status(200).send("Comment added successfully");
+      })
+      .catch(error => {
+        res.status(400).send(error);
+      })
+  }
+
+  const isAnonymous = req.body.isAnonymous;
+  if (!isAnonymous) {
+    return authMiddleware(req, res, async () => {
+      const user = await userModel.findOne({ username: req.user.username });
+      if (user !== null) {
+        query.userId = user._id;
+        await saveComment();
+      } else {
+        res.sendStatus(403)
+      }
+      next();
+    });
+  }
+  saveComment();
+})
+
+app.get('/comment/:blogid', async (req, res) => {
+  const blogId = req.params.blogid;
+  const comments = await commentModel.find({ blogId }).sort({ createdAt: 'descending' });
+  res.json(comments);
 })
 
 app.listen(port, () => console.log("[backend] listening on port " + port));

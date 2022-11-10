@@ -12,6 +12,8 @@ const blogPostSchema = new Schema({
         ref: "comments",
       }],
     tags: { type: Array },
+}, {
+  timestamps: true
 });
 
 const blogPostModel = mongoose.model("blogPost",blogPostSchema);

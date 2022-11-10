@@ -1,9 +1,7 @@
 import React,{useEffect} from "react";
 import Editor from "react-markdown-editor-lite";
-import ReactMarkdown from "react-markdown";
 import MarkdownIt from 'markdown-it';
 import "react-markdown-editor-lite/lib/index.css";
-import axios from 'axios';
 import S3FileUpload from 'react-s3';
 import { Buffer } from 'buffer';
 
@@ -69,7 +67,7 @@ return new Promise(resolve => {
 
 
   return (
-    <div className="App">
+    <div className="App" style={{textAlign: 'initial'}}>
       {/* <button onClick={handleClick}>Get value</button> */}          
       <Editor
         ref={mdEditor}

@@ -5,7 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
 import Background from "./Background";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { MESSAGE } from "../actions/messages";
 import { getErrorMessage } from "../utils/utils";
@@ -18,6 +18,7 @@ function BlogEdit(props) {
     const [annon, setAnnon] = React.useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { isLoggedIn, user } = useSelector(state => state.auth);
 
     const trim = (x) => {
         return x.replace(/^\s+|\s+$/gm, '');
@@ -31,16 +32,20 @@ function BlogEdit(props) {
             setError("Please Enter a valid Title and Description !")
         }
         else {
-            var payload = {
+            const payload = {
                 topic: e.target.formBasicTitle.value,
                 description: descripiton,
-                author: "Snigdha Chaturvedi",
+                author: "Anonymous User",
                 annonymusFlag: e.target.formBasicCheckbox.checked,
                 tags: [],
                 comments: []
             }
 
-            var api = "http://localhost:3001/createBlog"
+            if(isLoggedIn) {
+                payload.author = user.username;
+            }
+
+            const api = "http://localhost:3001/createBlog"
             axios.post(api, payload).then(response => {
                 if(response.status === 200) {
                     dispatch(MESSAGE.success("Blog created"));

@@ -11,8 +11,11 @@ import {
   MDBTypography,
   MDBCardTitle
 } from 'mdb-react-ui-kit';
+import { useNavigate } from 'react-router-dom';
 
 export default function Profile() {
+  const navigate = useNavigate();
+
   return (
     <div className="gradient-custom-2">
       <MDBContainer className="py-5 h-100">
@@ -42,7 +45,9 @@ export default function Profile() {
                       marginTop: '10px',
                       zIndex: '1'
                     }}
-                    to="/#/editProfile"
+                    onClick={() => {
+                      navigate('/editProfile');
+                    }}
                   >
                     Edit profile
                   </MDBBtn>

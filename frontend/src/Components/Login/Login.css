@@ -50,7 +50,7 @@ html{
   
 }
 
-.row input{
+.row input, #textarea{
   width: 80%;
   box-sizing: border-box;
 	border: none;
@@ -61,7 +61,7 @@ html{
   transition: box-shadow 0.2s ease-in;
 }
 
-.row input:focus{
+.row input:focus,  #textarea:focus{
    box-shadow: inset 0px -3px 0px 0px rgba(189, 106, 85, 0.616);
    outline: none;
 }

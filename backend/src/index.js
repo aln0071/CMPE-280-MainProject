@@ -199,6 +199,17 @@ app.put('/updateprofile/:profileid', async(req, res) => {
 
 })
 
+app.get('/user/:username', async (req, res) => {
+  const username = req.params.username;
+  const query = { username: username };
+  const user = await userModel.findOne(query).then(userResponse => {
+    res.status(200).json(userResponse)
+  })
+    .catch(error => {
+      res.status(400).send(error)
+    })
+});
+
 app.get('/test', authMiddleware, async (req, res) => {
   res.status(200).json({
     Authenticated: true

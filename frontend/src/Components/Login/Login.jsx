@@ -53,7 +53,7 @@ export function Form() {
   };
 
   if (isLoggedIn) {
-    return <Navigate to="/profile" />;
+    return <Navigate to="/" />;
   }
 
   return (

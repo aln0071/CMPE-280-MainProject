@@ -2,9 +2,6 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { logout } from '../actions/auth';
@@ -16,8 +13,8 @@ export default function TopNavbar({ navRef }) {
 
   const handleLogoutClick = () => {
     dispatch(logout());
-    // navigate('/');
-    window.location.reload();
+    navigate('/#/login');
+    // window.location.reload();
   };
 
   return (

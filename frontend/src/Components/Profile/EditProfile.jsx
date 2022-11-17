@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import {
   MDBBtn,
   MDBContainer,
@@ -10,13 +12,61 @@ import {
   MDBInput,
   MDBTextArea
 } from 'mdb-react-ui-kit';
+import { updateUser } from '../../services/user.service';
+import { uploadImage } from '../../services/image.service';
+import { MESSAGE } from '../../actions/messages';
+import { getErrorMessage } from '../../utils/utils';
 
 function EditProfile() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const hiddenFileInput = React.useRef(null);
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+
+  const [name, setName] = useState(user.name);
+  const [city, setCity] = useState(user.city);
+  const [aboutme, setAboutme] = useState(user.aboutme);
+  const [phone, setPhone] = useState(user.phone);
+  const [selectedFile, setSelectedFile] = useState();
+  const [isFileSelected, setIsSelected] = useState(false);
 
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
+  const handleImage = (event) => {
+    setSelectedFile(event.target.files[0]);
+    setIsSelected(true);
+    return uploadImage(event.target.files[0])
+      .then((response) => {
+        if (response.status === 200) {
+          console.log(response.data);
+          // return `${API_URL}image/${response.data.key}`;
+        } else {
+          throw new Error('Status not 200');
+        }
+      })
+      .catch((error) => {
+        dispatch(MESSAGE.error(getErrorMessage(error)));
+        return 'Error uploading image';
+      });
+  };
+  const handleSubmit = () => {
+    updateUser(user._id, name, aboutme, city, phone, '')
+      .then((response) => {
+        if (response.status === 200) {
+          dispatch(MESSAGE.success(response.data));
+          // window.location.reload();
+        } else if (response.status === 400) {
+          dispatch(MESSAGE.info(response.data));
+        } else {
+          throw new Error('Status code not 200');
+        }
+      })
+      .catch((error) => {
+        dispatch(MESSAGE.error(getErrorMessage(error)));
+      });
+  };
+
   return (
     <MDBContainer fluid className="py-5 h-100">
       <MDBRow className="d-flex justify-content-center align-items-center h-100">
@@ -38,23 +88,28 @@ function EditProfile() {
                   }}
                 />
                 <center>
-                <input type="file" ref={hiddenFileInput} style={{ display: 'none' }} />
+                  <input
+                    type="file"
+                    ref={hiddenFileInput}
+                    style={{ display: 'none' }}
+                    onChange={handleImage}
+                  />
 
-                <MDBBtn
-                  outline
-                  active
-                  color="dark"
-                  style={{
-                    height: '36px',
-                    overflow: 'visible',
-                    width: '150px',
-                    marginTop: '10px',
-                    zIndex: '1'
-                  }}
-                  onClick={handleClick}
-                >
-                  Select
-                </MDBBtn>
+                  <MDBBtn
+                    outline
+                    active
+                    color="dark"
+                    style={{
+                      height: '36px',
+                      overflow: 'visible',
+                      width: '150px',
+                      marginTop: '10px',
+                      zIndex: '1'
+                    }}
+                    onClick={handleClick}
+                  >
+                    Select
+                  </MDBBtn>
                 </center>
               </MDBCol>
 
@@ -66,9 +121,11 @@ function EditProfile() {
                         readOnly
                         wrapperClass="mb-4"
                         label="Username"
-                        size="lg"
+                        size="sm"
                         id="form1"
                         type="text"
+                        value={user.username}
+                        style={{ color: 'gray' }}
                       />
                     </MDBCol>
 
@@ -77,14 +134,24 @@ function EditProfile() {
                         readOnly
                         wrapperClass="mb-4"
                         label="Email"
-                        size="lg"
+                        size="sm"
                         id="form1"
                         type="text"
+                        value={user.email}
+                        style={{ color: 'gray' }}
                       />
                     </MDBCol>
                   </MDBRow>
 
-                  <MDBInput wrapperClass="mb-4" label="Name" size="lg" id="form3" type="text" />
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="Name"
+                    size="lg"
+                    id="form3"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                  />
                   <MDBTextArea
                     wrapperClass="mb-4"
                     label="About Me"
@@ -93,6 +160,8 @@ function EditProfile() {
                     type="textarea"
                     rows={2}
                     id="textarea"
+                    value={aboutme}
+                    onChange={(e) => setAboutme(e.target.value)}
                     style={{
                       borderTop: '0',
                       borderLeft: '0',
@@ -101,9 +170,24 @@ function EditProfile() {
                       outline: 'none'
                     }}
                   />
-                  <MDBInput wrapperClass="mb-4" label="City" size="lg" id="form4" type="text" />
-                  <MDBInput wrapperClass="mb-4" label="Birthday" size="lg" id="form5" type="text" />
-                  <MDBInput wrapperClass="mb-4" label="Phone" size="lg" id="form6" type="text" />
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="City"
+                    size="lg"
+                    id="form4"
+                    type="text"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                  />
+                  <MDBInput
+                    wrapperClass="mb-4"
+                    label="Phone"
+                    size="lg"
+                    id="form6"
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
 
                   <div className="d-flex justify-content-end pt-3">
                     <MDBBtn
@@ -116,7 +200,8 @@ function EditProfile() {
                         width: '150px',
                         marginTop: '10px',
                         zIndex: '1'
-                      }}>
+                      }}
+                    >
                       Reset
                     </MDBBtn>
                     <MDBBtn
@@ -130,7 +215,8 @@ function EditProfile() {
                         width: '150px',
                         marginTop: '10px',
                         zIndex: '1'
-                      }}>
+                      }}
+                      onClick={handleSubmit}>
                       Submit
                     </MDBBtn>
                   </div>

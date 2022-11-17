@@ -50,7 +50,7 @@ function App() {
       >
         <Routes>
           <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/signup" element={<RegisterForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/editProfile" element={<EditProfile />} />
           <Route path="/createBlog" element={<BlogEdit />} />

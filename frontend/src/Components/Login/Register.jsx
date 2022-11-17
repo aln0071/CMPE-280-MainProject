@@ -11,7 +11,7 @@ import { MESSAGE } from '../../actions/messages';
 export default function RegisterForm() {
   return (
     <div id="registerform">
-      <FormHeader title="Register" />
+      <FormHeader title="Sign Up" />
       <Form />
       <OtherMethods label="Or sign up with:" />
       <SignInLink />
@@ -92,11 +92,11 @@ export function Form() {
         value={password2}
         onChange={onChangePassword2}
       />
-      <FormButton title="Register" onSubmit={handleRegister} />
+      <FormButton title="Sign Up" onSubmit={handleRegister} />
     </div>
   );
 }
 
 export function SignInLink(props) {
-  return <AltLink title="Have an Account?" label="Sign In" link="/#/login" />;
+  return <AltLink title="Have an Account?" label="Log In" link="/#/login" />;
 }

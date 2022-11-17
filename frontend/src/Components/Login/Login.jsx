@@ -41,9 +41,6 @@ export function Form() {
     e.preventDefault();
 
     console.log(username, password);
-    // setLoading(true);
-
-    // form.current.validateAll();
 
     dispatch(login(username, password))
       .then(() => {
@@ -115,7 +112,7 @@ export function OtherMethods(props) {
   );
 }
 export function SignUpLink(props) {
-  return <AltLink title="No Account?" label="Create One" link="/#/register" />;
+  return <AltLink title="No Account?" label="Create One" link="/#/signup" />;
 }
 
 export function AltLink(props) {

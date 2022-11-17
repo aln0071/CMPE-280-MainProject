@@ -7,8 +7,8 @@ import {
 } from './types';
 
 import AuthService from '../services/auth.service';
+import { MESSAGE_TYPE } from '../reducers/message';
 import { MESSAGE } from './messages';
-import { getErrorMessage } from '../utils/utils';
 
 export const register = (username, email, password) => (dispatch) => AuthService.register(username, email, password).then(
   (response) => {
@@ -21,7 +21,7 @@ export const register = (username, email, password) => (dispatch) => AuthService
     return Promise.resolve();
   },
   (error) => {
-    const message = getErrorMessage(error);
+    const message = error?.response?.data?.message || error?.response?.data || error?.message || error?.toString() || '';
 
     dispatch({
       type: REGISTER_FAIL
@@ -43,7 +43,7 @@ export const login = (username, password) => (dispatch) => AuthService.login(use
     return Promise.resolve();
   },
   (error) => {
-    const message = getErrorMessage(error);
+    const message = error?.response?.data?.message || error?.response?.data || error?.message || error?.toString() || '';
 
     dispatch({
       type: LOGIN_FAIL
@@ -63,3 +63,4 @@ export const logout = () => (dispatch) => {
     type: LOGOUT
   });
 };
+

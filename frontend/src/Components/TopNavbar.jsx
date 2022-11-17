@@ -39,7 +39,7 @@ export default function TopNavbar({ navRef }) {
             )}
             {!currentUser && (
               <Nav>
-                <Nav.Link href="/#/register">Sign Up</Nav.Link>
+                <Nav.Link href="/#/signup">Sign Up</Nav.Link>
                 <Nav.Link href="/#/login"> Log In</Nav.Link>
               </Nav>
             )}

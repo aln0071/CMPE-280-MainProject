@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MDBCol,
   MDBContainer,
@@ -12,9 +12,79 @@ import {
   MDBCardTitle
 } from 'mdb-react-ui-kit';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { getUser } from '../../services/user.service';
+import { MESSAGE } from '../../actions/messages';
+import { getErrorMessage } from '../../utils/utils';
 
-export default function Profile() {
+export default function Profile(props) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isLoggedIn, user } = useSelector((state) => state.auth);
+
+  const [displayUser, setDisplayUser] = useState(user);
+  useEffect(() => {
+    if (props && props.username) {
+      getUser(props.username)
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response.data);
+            setDisplayUser(response.data);
+          } else {
+            throw new Error('Status code not 200');
+          }
+        })
+        .catch((error) => {
+          dispatch(MESSAGE.error(getErrorMessage(error)));
+        });
+    }
+  }, []);
+
+
+  const button = () => {
+    if (props && props.userId) {
+      return (
+        <MDBBtn
+          outline
+          active
+          color="dark"
+          style={{
+            height: '36px',
+            overflow: 'visible',
+            width: '150px',
+            marginTop: '10px',
+            zIndex: '1'
+          }}
+          onClick={() => {
+            // navigate('/editProfile');
+          }}
+        >
+          Follow
+        </MDBBtn>
+      );
+    }
+ 
+
+    return (
+      <MDBBtn
+        outline
+        active
+        color="dark"
+        style={{
+          height: '36px',
+          overflow: 'visible',
+          width: '150px',
+          marginTop: '10px',
+          zIndex: '1'
+        }}
+        onClick={() => {
+          navigate('/editProfile');
+        }}
+      >
+        Edit profile
+      </MDBBtn>
+    );
+  };
 
   return (
     <div className="gradient-custom-2">
@@ -34,28 +104,12 @@ export default function Profile() {
                     fluid
                     style={{ width: '150px', zIndex: '1' }}
                   />
-                  <MDBBtn
-                    outline
-                    active
-                    color="dark"
-                    style={{
-                      height: '36px',
-                      overflow: 'visible',
-                      width: '150px',
-                      marginTop: '10px',
-                      zIndex: '1'
-                    }}
-                    onClick={() => {
-                      navigate('/editProfile');
-                    }}
-                  >
-                    Edit profile
-                  </MDBBtn>
+                  {isLoggedIn && button()}
                 </div>
 
                 <div className="ms-3" style={{ marginTop: '130px' }}>
-                  <MDBTypography tag="h5">Andy Horwitz</MDBTypography>
-                  <MDBCardText>New York</MDBCardText>
+                  <MDBTypography tag="h5">{displayUser.name}</MDBTypography>
+                  <MDBCardText>{displayUser.city}</MDBCardText>
                 </div>
               </div>
 
@@ -79,7 +133,7 @@ export default function Profile() {
                 <div className="mb-5">
                   <p className="lead fw-normal mb-1">About</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                    <MDBCardText className="font-italic mb-1">Web Developer</MDBCardText>
+                    <MDBCardText className="font-italic mb-1">{displayUser.aboutme}</MDBCardText>
                     <MDBCardText className="font-italic mb-1">Lives in New York</MDBCardText>
                     <MDBCardText className="font-italic mb-0">Photographer</MDBCardText>
                   </div>

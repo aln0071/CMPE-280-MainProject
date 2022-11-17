@@ -142,20 +142,14 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
   try {
-    // Get user input
     const { username, password } = req.body;
-
-    // Validate user input
     if (!(username && password)) {
       res.status(400).send("All input is required");
     }
-    // Validate if user exist in our database
     const user = await userModel.findOne({ username: username });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Create token
       const token = jwt.sign(
         { user_id: user._id, username: user.username },
         tokenKey,
@@ -164,19 +158,46 @@ app.post('/login', async (req, res) => {
         }
       );
 
-      // save user token
       user.token = token;
-
-      // user
       res.status(200).json(user);
     }
-    else {
+    else if (!user){
       res.status(400).send("Invalid Credentials");
     }
   } catch (err) {
-    console.log(err);
+    res.status(500).send(err)
   }
 });
+
+app.put('/updateprofile/:profileid', async(req, res) => {
+  try{
+    const id= req.params.profileid;
+    const {name, aboutme, city, phone} = req.body;
+    const user = await userModel.updateOne(
+                  { _id: id },
+                  {
+                    $set: {
+                      name: name,
+                      aboutme: aboutme,
+                      city: city,
+                    phone: phone
+                    }
+                  }
+                )
+    if (user.matchedCount == 0){
+      res.status(400).send('User Not Found');
+    }
+    else if (user.modifiedCount == 0){
+      res.status(400).send('Nothing to Update');
+    }
+    else{
+      res.status(200).send("Updated Successfully");
+    }
+  } catch(error) {
+    res.status(500).send(error);
+  }
+
+})
 
 app.get('/test', authMiddleware, async (req, res) => {
   res.status(200).json({

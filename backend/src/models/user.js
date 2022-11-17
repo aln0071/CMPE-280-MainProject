@@ -7,6 +7,10 @@ const userSchema = new Schema({
     username: { type: String },
     password: { type : String },
     email: { type: String },
+    aboutme: { type: String },
+    city: { type: String },
+    phone: { type: String },
+    photo: {type: String},
     bookmarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",

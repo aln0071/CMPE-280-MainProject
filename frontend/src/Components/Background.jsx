@@ -26,9 +26,11 @@ export default function Background(props) {
       options={{
         fullScreen: true,
         background: {
-          color: {
-            value: '#EDE1ED'
-          }
+          background: "linear-gradient(120deg, rgb(237, 255, 253) 0%,     rgb(9, 212, 195) 100%)"
+
+          // color: {
+          //   value: '#EDE1ED'
+          // }
         },
         fpsLimit: 120,
         interactivity: {

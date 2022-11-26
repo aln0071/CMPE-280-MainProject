@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../services/user.service';
+import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
 
@@ -21,8 +22,29 @@ export default function Profile(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-
+  const [displayPicture, setDisplayPicture] = useState();
   const [displayUser, setDisplayUser] = useState(user);
+
+  const getImage = (imgKey) => {
+    getImageStream(imgKey)
+      .then((response) => {
+        if (response.status === 200) {
+          const chunks = response.data;
+          const blob = new Blob([chunks], { type: 'image/png' });
+          console.log(blob);
+          console.log(URL.createObjectURL(blob));
+          setDisplayPicture(URL.createObjectURL(blob));
+
+          // setDisplayUser(response.data);
+        } else {
+          throw new Error('Status code not 200');
+        }
+      })
+      .catch((error) => {
+        dispatch(MESSAGE.error(getErrorMessage(error)));
+      });
+  };
+
   useEffect(() => {
     if (props && props.username) {
       getUser(props.username)
@@ -37,9 +59,11 @@ export default function Profile(props) {
         .catch((error) => {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
+      getImage(props.imgKey);
+    } else {
+      getImage(user.imgKey);
     }
   }, []);
-
 
   const button = () => {
     if (props && props.userId) {
@@ -63,7 +87,6 @@ export default function Profile(props) {
         </MDBBtn>
       );
     }
- 
 
     return (
       <MDBBtn
@@ -98,7 +121,8 @@ export default function Profile(props) {
               >
                 <div className="ms-4 mt-5 d-flex flex-column" style={{ width: '150px' }}>
                   <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                    // src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                    src={displayPicture}
                     alt="Generic placeholder image"
                     className="mt-4 mb-2 img-thumbnail"
                     fluid

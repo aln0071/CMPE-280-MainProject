@@ -172,7 +172,7 @@ app.post('/login', async (req, res) => {
 app.put('/updateprofile/:profileid', async(req, res) => {
   try{
     const id= req.params.profileid;
-    const {name, aboutme, city, phone} = req.body;
+    const {name, aboutme, city, phone, imgKey} = req.body;
     const user = await userModel.updateOne(
                   { _id: id },
                   {
@@ -180,7 +180,8 @@ app.put('/updateprofile/:profileid', async(req, res) => {
                       name: name,
                       aboutme: aboutme,
                       city: city,
-                    phone: phone
+                      phone: phone,
+                      imgKey:imgKey
                     }
                   }
                 )

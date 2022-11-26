@@ -10,7 +10,7 @@ const userSchema = new Schema({
     aboutme: { type: String },
     city: { type: String },
     phone: { type: String },
-    photo: {type: String},
+    imgKey: {type: String},
     bookmarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",

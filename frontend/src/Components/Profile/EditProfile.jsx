@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -13,11 +13,14 @@ import {
   MDBTextArea
 } from 'mdb-react-ui-kit';
 import { updateUser } from '../../services/user.service';
-import { uploadImage } from '../../services/image.service';
+import { uploadImage, getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
 
 function EditProfile() {
+  const API_URL = 'http://localhost:3001/';
+  const defaultImg =
+    'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp';
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const hiddenFileInput = React.useRef(null);
@@ -28,19 +31,41 @@ function EditProfile() {
   const [aboutme, setAboutme] = useState(user.aboutme);
   const [phone, setPhone] = useState(user.phone);
   const [selectedFile, setSelectedFile] = useState();
-  const [isFileSelected, setIsSelected] = useState(false);
+  const [preview, setPreview] = useState(defaultImg);
+  const [imageKey, setImageKey] = useState(user.imgKey);
 
   const handleClick = (event) => {
     hiddenFileInput.current.click();
   };
-  const handleImage = (event) => {
-    setSelectedFile(event.target.files[0]);
-    setIsSelected(true);
-    return uploadImage(event.target.files[0])
+
+  // create a preview as a side effect, whenever selected file is changed
+  useEffect(() => {
+    if (selectedFile) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreview(objectUrl);
+
+      // free memory when ever this component is unmounted
+      // return () => URL.revokeObjectURL(objectUrl);
+    }
+  }, [selectedFile]);
+
+  const onSelectFile = (e) => {
+    if (!e.target.files || e.target.files.length === 0) {
+      setSelectedFile(undefined);
+      return;
+    }
+
+    // I've kept this example simple by using the first image instead of multiple
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const imgUpload = () => {
+    uploadImage(selectedFile)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data);
-          // return `${API_URL}image/${response.data.key}`;
+          setImageKey(response.data.Key);
+          // return response.data.key;
         } else {
           throw new Error('Status not 200');
         }
@@ -50,8 +75,10 @@ function EditProfile() {
         return 'Error uploading image';
       });
   };
-  const handleSubmit = () => {
-    updateUser(user._id, name, aboutme, city, phone, '')
+
+  const textUpdate = () => {
+    console.log(imageKey);
+    updateUser(user._id, name, aboutme, city, phone, imageKey)
       .then((response) => {
         if (response.status === 200) {
           dispatch(MESSAGE.success(response.data));
@@ -67,6 +94,13 @@ function EditProfile() {
       });
   };
 
+  const formUpdate = async () => {
+    if (selectedFile) {
+      await imgUpload();
+    }
+    textUpdate();
+  };
+
   return (
     <MDBContainer fluid className="py-5 h-100">
       <MDBRow className="d-flex justify-content-center align-items-center h-100">
@@ -77,7 +111,7 @@ function EditProfile() {
             <MDBRow className="g-0">
               <MDBCol md="4" className="justify-content-center align-items-center p-2">
                 <MDBCardImage
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  src={preview}
                   alt="Sample photo"
                   className="mt-4 mb-2 img-thumbnail"
                   style={{
@@ -92,7 +126,7 @@ function EditProfile() {
                     type="file"
                     ref={hiddenFileInput}
                     style={{ display: 'none' }}
-                    onChange={handleImage}
+                    onChange={onSelectFile}
                   />
 
                   <MDBBtn
@@ -106,8 +140,7 @@ function EditProfile() {
                       marginTop: '10px',
                       zIndex: '1'
                     }}
-                    onClick={handleClick}
-                  >
+                    onClick={handleClick}>
                     Select
                   </MDBBtn>
                 </center>
@@ -200,8 +233,7 @@ function EditProfile() {
                         width: '150px',
                         marginTop: '10px',
                         zIndex: '1'
-                      }}
-                    >
+                      }}>
                       Reset
                     </MDBBtn>
                     <MDBBtn
@@ -216,7 +248,8 @@ function EditProfile() {
                         marginTop: '10px',
                         zIndex: '1'
                       }}
-                      onClick={handleSubmit}>
+                      onClick={formUpdate}
+                    >
                       Submit
                     </MDBBtn>
                   </div>

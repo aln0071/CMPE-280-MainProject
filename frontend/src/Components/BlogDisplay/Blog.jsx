@@ -4,7 +4,7 @@ import EditorCustom from './BlogReadOnly';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Background from "../Background";
+import Background from "../Utilities/Background";
 import { getErrorMessage } from "../../utils/utils";
 import { getBlog } from '../../services/blog.service'
 import { postComment } from "../../services/comment.service";

@@ -4,10 +4,10 @@ import MarkdownIt from 'markdown-it';
 import "react-markdown-editor-lite/lib/index.css";
 import S3FileUpload from 'react-s3';
 import { Buffer } from 'buffer';
-import { uploadImage } from "../services/image.service";
+import { uploadImage } from "../../services/image.service";
 import { useDispatch } from 'react-redux'
-import { MESSAGE } from '../actions/messages';
-import { getErrorMessage } from '../utils/utils';
+import { MESSAGE } from '../../actions/messages';
+import { getErrorMessage } from '../../utils/utils';
 
 const API_URL = 'http://localhost:3001/';
 

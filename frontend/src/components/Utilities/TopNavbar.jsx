@@ -4,7 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { logout } from '../actions/auth';
+import { logout } from '../../actions/auth';
 
 export default function TopNavbar({ navRef }) {
   const navigate = useNavigate();

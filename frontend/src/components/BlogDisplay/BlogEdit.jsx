@@ -4,11 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
-import Background from "./Background";
+import Background from "../Utilities/Background";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { MESSAGE } from "../actions/messages";
-import { getErrorMessage } from "../utils/utils";
+import { MESSAGE } from "../../actions/messages";
+import { getErrorMessage } from "../../utils/utils";
 
 function BlogEdit(props) {
 
@@ -60,7 +60,7 @@ function BlogEdit(props) {
     }
 
     return (<div><Background />
-        <div style={{ marginTop: '10rem' }}>
+        <div style={{ marginTop: '1rem' }}>
             <center>
                 <Form onSubmit={submitHandler}>
                     <Card className="cardBack" style={{ width: '70rem', align: 'center' }}>

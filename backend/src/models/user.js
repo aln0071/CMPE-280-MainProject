@@ -4,13 +4,6 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: { type: String},
-    username: { type: String },
-    password: { type : String },
-    email: { type: String },
-    aboutme: { type: String },
-    city: { type: String },
-    phone: { type: String },
-    imgKey: {type: String},
     bookmarks: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",
@@ -19,7 +12,6 @@ const userSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost",
       }],
-    token: { type: String }
 });
 
 const userModel = mongoose.model("user",userSchema);

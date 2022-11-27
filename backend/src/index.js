@@ -43,9 +43,13 @@ app.get("/", (req, res) => {
 })
 
 // get image
-app.get('/image/:key', (req, res) => {
+app.get('/image/:key', (req, res, next) => {
   const key = req.params.key;
   const readStream = getFileStream(key);
+  readStream.on('error', () => {
+    res.sendStatus(400);
+    return next();
+  })
   readStream.pipe(res);
 })
 

@@ -17,6 +17,7 @@ import { getUser } from '../../services/user.service';
 import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
+import { getBlogsByUser } from '../../services/blog.service';
 
 export default function Profile(props) {
   const navigate = useNavigate();
@@ -24,6 +25,9 @@ export default function Profile(props) {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const [displayPicture, setDisplayPicture] = useState();
   const [displayUser, setDisplayUser] = useState(user);
+  // can have 4 possible values
+  // null => loading, undefined => load failed, [] => no data, array of blogs
+  const [blogs, setBlogs] = useState(null);
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -31,8 +35,6 @@ export default function Profile(props) {
         if (response.status === 200) {
           const chunks = response.data;
           const blob = new Blob([chunks], { type: 'image/png' });
-          console.log(blob);
-          console.log(URL.createObjectURL(blob));
           setDisplayPicture(URL.createObjectURL(blob));
 
           // setDisplayUser(response.data);
@@ -44,6 +46,16 @@ export default function Profile(props) {
         dispatch(MESSAGE.error(getErrorMessage(error)));
       });
   };
+
+  const getBlogs = async (username) => {
+    try {
+      const blogs = await getBlogsByUser(username);
+      setBlogs(blogs.data);
+    } catch (error) {
+      setBlogs(undefined);
+      dispatch(MESSAGE.error(getErrorMessage(error)));
+    }
+  }
 
   useEffect(() => {
     if (props && props.username) {
@@ -60,10 +72,45 @@ export default function Profile(props) {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
       getImage(props.imgKey);
+      getBlogs(props.username)
     } else {
       getImage(user.imgKey);
+      getBlogs(user.username)
     }
   }, []);
+
+  const renderBlogList = () => {
+    if (blogs === null) {
+      return "Loading..."
+    } else if (blogs === undefined) {
+      return <div>Loading failed. <button onClick={() => getBlogs()}>Retry</button></div>
+    } else if (Array.isArray(blogs)) {
+      if (blogs.length === 0) {
+        return <div className='no-blogs-message'>No blogs from this user</div>
+      } else {
+        return blogs.map(blog => {
+          return (
+            <MDBCol key={blog._id}>
+              <MDBCard onClick={() => navigate(`/blog/${blog._id}`)} className="recent-blog">
+                <MDBCardImage
+                  src="https://mdbootstrap.com/img/new/standard/city/041.webp"
+                  alt="..."
+                  position="top"
+                />
+                <MDBCardBody>
+                  <MDBCardTitle>{blog.topic}</MDBCardTitle>
+                  <MDBCardText>
+                    {blog.description}
+                  </MDBCardText>
+                </MDBCardBody>
+              </MDBCard>
+            </MDBCol>
+          )
+        })
+      }
+    }
+    return "unhandled exception";
+  }
 
   const button = () => {
     if (props && props.userId) {
@@ -171,75 +218,15 @@ export default function Profile(props) {
                   </MDBCardText>
                 </div>
 
+                {/* Start of blogs list */}
                 <div
                   className="d-flex justify-content-between align-items-center mb-4"
                   style={{ backgroundColor: '#f8f9fa' }}
                 >
                   <MDBRow className="row-cols-4 row-cols-md-3 g-4">
-                    <MDBCol>
-                      <MDBCard>
-                        <MDBCardImage
-                          src="https://mdbootstrap.com/img/new/standard/city/041.webp"
-                          alt="..."
-                          position="top"
-                        />
-                        <MDBCardBody>
-                          <MDBCardTitle>Card title</MDBCardTitle>
-                          <MDBCardText>
-                            This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
-                          </MDBCardText>
-                        </MDBCardBody>
-                      </MDBCard>
-                    </MDBCol>
-                    <MDBCol>
-                      <MDBCard>
-                        <MDBCardImage
-                          src="https://mdbootstrap.com/img/new/standard/city/042.webp"
-                          alt="..."
-                          position="top"
-                        />
-                        <MDBCardBody>
-                          <MDBCardTitle>Card title</MDBCardTitle>
-                          <MDBCardText>
-                            This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
-                          </MDBCardText>
-                        </MDBCardBody>
-                      </MDBCard>
-                    </MDBCol>
-                    <MDBCol>
-                      <MDBCard>
-                        <MDBCardImage
-                          src="https://mdbootstrap.com/img/new/standard/city/043.webp"
-                          alt="..."
-                          position="top"
-                        />
-                        <MDBCardBody>
-                          <MDBCardTitle>Card title</MDBCardTitle>
-                          <MDBCardText>
-                            This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
-                          </MDBCardText>
-                        </MDBCardBody>
-                      </MDBCard>
-                    </MDBCol>
-                    <MDBCol>
-                      <MDBCard>
-                        <MDBCardImage
-                          src="https://mdbootstrap.com/img/new/standard/city/044.webp"
-                          alt="..."
-                          position="top"
-                        />
-                        <MDBCardBody>
-                          <MDBCardTitle>Card title</MDBCardTitle>
-                          <MDBCardText>
-                            This is a longer card with supporting text below as a natural lead-in to
-                            additional content. This content is a little bit longer.
-                          </MDBCardText>
-                        </MDBCardBody>
-                      </MDBCard>
-                    </MDBCol>
+                    {
+                      renderBlogList()
+                    }
                   </MDBRow>
                 </div>
               </MDBCardBody>

@@ -92,7 +92,7 @@ function BlogEdit() {
                                     <Form.Group>
                                         {/* <Form.Text>Write your comment</Form.Text> */}
                                         <Form.Control value={comment} onChange={e => setComment(e.target.value)} type="text" placeholder="Write your comment" style={{ margin: "10px 0px" }}></Form.Control>
-                                        <Form.Check type='checkbox' checked={isAnonymous} onClick={() => setIsAnonymous(!isAnonymous)} label="Comment anonymously" disabled={!isLoggedIn} />
+                                        <Form.Check type='checkbox' defaultChecked={isAnonymous} onClick={() => setIsAnonymous(!isAnonymous)} label="Comment anonymously" disabled={!isLoggedIn} />
                                         <Button type="submit">Submit</Button>
                                     </Form.Group>
                                 </Form>

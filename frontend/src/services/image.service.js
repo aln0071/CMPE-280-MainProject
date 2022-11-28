@@ -8,4 +8,4 @@ export const uploadImage = file => {
     return axios.post(`${API_URL}image`, formData);
 }
 
-export const getImageStream = (key) => axios.get(`${API_URL}image/${key}`);
+export const getImageStream = (key) => axios.get(`${API_URL}image/${key}`, {responseType: 'arraybuffer'});

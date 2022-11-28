@@ -16,15 +16,17 @@ import { updateUser } from '../../services/user.service';
 import { uploadImage, getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
+import URLS from '../../services/urls';
+import { LOGIN_SUCCESS } from '../../actions/types';
 
 function EditProfile() {
-  const API_URL = 'http://localhost:3001/';
-  const defaultImg =
-    'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp';
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const hiddenFileInput = React.useRef(null);
   const { isLoggedIn, user } = useSelector((state) => state.auth);
+  const defaultImg = user.imgKey ? `${URLS.API_URL}${URLS.GET_IMAGE.replace('{key}', user.imgKey)}` :
+    'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp';
+  console.log(defaultImg)
 
   const [name, setName] = useState(user.name);
   const [city, setCity] = useState(user.city);
@@ -32,7 +34,7 @@ function EditProfile() {
   const [phone, setPhone] = useState(user.phone);
   const [selectedFile, setSelectedFile] = useState();
   const [preview, setPreview] = useState(defaultImg);
-  const [imageKey, setImageKey] = useState(user.imgKey);
+  const imageKey = React.useRef(user.imgKey);
 
   const handleClick = (event) => {
     hiddenFileInput.current.click();
@@ -60,11 +62,12 @@ function EditProfile() {
   };
 
   const imgUpload = () => {
-    uploadImage(selectedFile)
+    return uploadImage(selectedFile)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data);
-          setImageKey(response.data.Key);
+          // setImageKey(response.data.Key);
+          imageKey.current = response.data.Key;
           // return response.data.key;
         } else {
           throw new Error('Status not 200');
@@ -77,11 +80,24 @@ function EditProfile() {
   };
 
   const textUpdate = () => {
-    console.log(imageKey);
-    updateUser(user._id, name, aboutme, city, phone, imageKey)
+    updateUser(user._id, name, aboutme, city, phone, imageKey.current)
       .then((response) => {
         if (response.status === 200) {
           dispatch(MESSAGE.success(response.data));
+          dispatch({
+            type: LOGIN_SUCCESS,
+            payload: {
+              isLoggedIn: true,
+              user: {
+                ...user,
+                name,
+                aboutme,
+                city,
+                phone,
+                imgKey: imageKey.current
+              }
+            }
+          })
           // window.location.reload();
         } else if (response.status === 400) {
           dispatch(MESSAGE.info(response.data));
@@ -192,7 +208,6 @@ function EditProfile() {
                     id="form5"
                     type="textarea"
                     rows={2}
-                    id="textarea"
                     value={aboutme}
                     onChange={(e) => setAboutme(e.target.value)}
                     style={{

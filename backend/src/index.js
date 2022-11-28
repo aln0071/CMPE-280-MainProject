@@ -74,6 +74,16 @@ app.get('/getAllBlogs', async (req, res) => {
     });
 });
 
+app.get('/getRecentBlogs/:username', async (req, res) => {
+  const username = req.params.username;
+  try {
+    const blogs = await blogModel.find({ author: username, annonymusFlag: false })
+    res.status(200).json(blogs);
+  } catch(error) {
+    res.status(400).send(error);
+  }
+})
+
 app.get('/getBlog/:id', async (req, res) => {
   const blogNum = req.params.id;
   const query = { _id: blogNum };

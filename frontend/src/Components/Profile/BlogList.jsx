@@ -12,8 +12,13 @@ import {
   MDBCardTitle
 } from 'mdb-react-ui-kit';
 
+import { useNavigate, useLocation } from 'react-router-dom';
+
+
 export default function BlogList(props) {
     const {blogs, bookmakredBlogs, displayUser} = props
+    const navigate = useNavigate();
+
   const renderBlogList = (blogList, bookmarked = false) => {
         if (blogList === null) {
           return "Loading..."

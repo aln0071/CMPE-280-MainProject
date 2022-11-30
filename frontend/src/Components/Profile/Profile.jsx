@@ -94,12 +94,15 @@ export default function Profile(props) {
         .then((response) => {
           if (response.status === 200) {
             const u = response.data;
-            console.log(u)
+            const f = u.followers.map(({ username }) => username);
+            console.log('followers', followers);
+            console.log("profile user", u)
             setDisplayUser(u);
             getImage(u.imgKey);
             getBlogs(author);
             getBookmarkedBlogsList(author);
-            if (u.followers.includes(user._id)) {
+
+            if (f.includes(user.username)) {
               setFollowButton(false);
             }
             setFollowers(u.followers.length)

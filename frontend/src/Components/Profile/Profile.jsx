@@ -217,9 +217,9 @@ export default function Profile(props) {
                   {isLoggedIn && button()}
                 </div>
 
-                <div className="ms-3" style={{ marginTop: '130px' }}>
+                <div className="ms-3" style={{ marginTop: '110px' }}>
                   <MDBTypography tag="h5">{displayUser.name}</MDBTypography>
-                  <MDBCardText>{displayUser.city}</MDBCardText>
+                  <MDBCardText>@{displayUser.username}<br/>{displayUser.city}</MDBCardText>
                 </div>
               </div>
 

@@ -32,8 +32,9 @@ export default function Profile(props) {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const [displayPicture, setDisplayPicture] = useState(defaultImg); 
   const [displayUser, setDisplayUser] = useState(user);
-
+  
   const [blogs, setBlogs] = useState(null);
+  const [annonblogs, setAnnonBlogs] = useState(null);
   const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
   const [followButton, setFollowButton] = useState(true);
   const [followers, setFollowers] = useState(0);
@@ -67,7 +68,26 @@ export default function Profile(props) {
   const getBlogs = async (username) => {
     try {
       const blogs = await getBlogsByUser(username);
-      setBlogs(blogs.data);
+      console.log("ppppppp",blogs)
+      var annonBlogs=[]
+      var restBlogs=[]
+      console.log("ppppppp",annonBlogs,restBlogs)
+
+        for (let i = 0; i < blogs.data.length; i++){        
+          console.log(blog)
+          var blog =blogs.data[i]
+          if(blog.annonymusFlag==true){
+            annonBlogs.push(blog)
+          }
+          else{
+            restBlogs.push(blog)
+          }
+        }
+
+        console.log("restBlogs",restBlogs)
+        console.log("annonBlogs",annonBlogs)
+      setBlogs(restBlogs);
+      setAnnonBlogs(annonBlogs);
     } catch (error) {
       setBlogs(undefined);
       dispatch(MESSAGE.error(getErrorMessage(error)));
@@ -227,7 +247,7 @@ export default function Profile(props) {
                 <div className="d-flex justify-content-end text-center py-1">
                 <div>
                   <button className='button-link' onClick={()=> {setActive('main')}}>
-                    <MDBCardText className="mb-1 h5">{Array.isArray(blogs) && blogs.length}</MDBCardText></button>
+                    <MDBCardText className="mb-1 h5">{Array.isArray(blogs) && Array.isArray(annonblogs) && blogs.length+annonblogs.length }</MDBCardText></button>
                     <MDBCardText className="small text-muted mb-0">Blogs</MDBCardText>
                   </div>
                   <div className="px-3">
@@ -253,7 +273,7 @@ export default function Profile(props) {
                   </>)}
               </div>
               <MDBCardBody className="text-black p-9">
-                {active === 'main' && (<BlogList blogs={blogs} bookmakredBlogs={bookmakredBlogs} displayUser={displayUser}/>)}
+                {active === 'main' && blogs && annonblogs &&(<BlogList blogs={blogs} annonBlogs={annonblogs} bookmakredBlogs={bookmakredBlogs} displayUser={displayUser}/>)}
                 {active === 'followers' && renderUserList(displayUser.followers)}
                 {active === 'following' && renderUserList(displayUser.following)}
               </MDBCardBody>

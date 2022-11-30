@@ -16,8 +16,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 
 export default function BlogList(props) {
-    const {blogs, bookmakredBlogs, displayUser} = props
+    const {blogs,annonBlogs, bookmakredBlogs, displayUser} = props
     const navigate = useNavigate();
+  useEffect (()=>{},[props])
 
   const renderBlogList = (blogList, bookmarked = false) => {
         if (blogList === null) {
@@ -64,6 +65,12 @@ export default function BlogList(props) {
             </a> */}
         </MDBCardText>
       </div>
+      <div
+        className="d-flex justify-content-between align-items-center mb-4"
+        style={{ backgroundColor: '#f8f9fa' }}
+      >
+        <MDBRow className="row-cols-4 row-cols-md-3 g-4">{renderBlogList(blogs)}</MDBRow>
+      </div>
 
       <div className="d-flex justify-content-between align-items-center mb-4">
         <MDBCardText className="lead fw-normal mb-0">Annonymus Blogs</MDBCardText>
@@ -79,7 +86,7 @@ export default function BlogList(props) {
         className="d-flex justify-content-between align-items-center mb-4"
         style={{ backgroundColor: '#f8f9fa' }}
       >
-        <MDBRow className="row-cols-4 row-cols-md-3 g-4">{renderBlogList(blogs)}</MDBRow>
+        <MDBRow className="row-cols-4 row-cols-md-3 g-4">{renderBlogList(annonBlogs)}</MDBRow>
       </div>
       {/* End of blogs list */}
 

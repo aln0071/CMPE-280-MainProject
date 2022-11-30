@@ -2,14 +2,20 @@ import React, { useState } from "react";
 import {useNavigate} from "react-router-dom";
 import EditorCustom from './EditorCustom';
 import Button from 'react-bootstrap/Button';
+import Badge from 'react-bootstrap/Badge';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Badge from 'react-bootstrap/Badge';
 
 function BlogMinimized(props) {
     let navigate = useNavigate();
     const blogdisplay = () => {
         navigate(`/blog/${props.blog._id}`)
+    }
+
+    const tagdisplay = (e,tag) => {
+        e.preventDefault();
+        console.log("her",tag)
+        navigate(`/relatedReads/${tag}`)
     }
   
     return(<div>
@@ -23,8 +29,8 @@ function BlogMinimized(props) {
                     {props.blog.tags &&
                                     <div class="d-flex gs4">
                                                     {props.blog.tags.map(tag => 
-                                                    {return(<Badge bg="secondary" style={{marginLeft:"0.5rem",
-                                                    fontSize: "medium"}} >{tag}</Badge>)})}
+                                                    {return(<div onClick={(e)=>tagdisplay(e,tag)}><Badge bg="secondary" style={{marginLeft:"0.5rem",
+                                                    fontSize: "medium"}}>{tag}</Badge></div>)})}
                                     </div>}
                 </Card.Text>
                 <Button key={props.blog._id} onClick={blogdisplay} style={{'marginLeft':"3rem",

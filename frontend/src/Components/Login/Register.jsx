@@ -55,7 +55,7 @@ export function Form() {
 
     dispatch(register(username, email, password))
       .then(() => {
-        navigate('/login')
+        navigate('/editprofile')
       })
       .catch((e) => {
         console.log(e)

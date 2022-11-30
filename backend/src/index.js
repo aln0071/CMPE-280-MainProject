@@ -77,7 +77,7 @@ app.get('/getAllBlogs', async (req, res) => {
 app.get('/getRecentBlogs/:username', async (req, res) => {
   const username = req.params.username;
   try {
-    const blogs = await blogModel.find({ author: username, annonymusFlag: false })
+    const blogs = await blogModel.find({ author: username})
     res.status(200).json(blogs);
   } catch (error) {
     res.status(400).send(error);

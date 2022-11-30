@@ -80,7 +80,7 @@ function BlogEdit() {
                             <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
                                 <div className="blog-title-readonly">
                                     <div></div>
-                                    <div>{blog.topic}</div>
+                                    <div style={{ "fontSize": "3rem","color": "grey" }}>{blog.topic}</div>
                                     {isLoggedIn ?
                                         <div className="bookmark-symbol" onClick={() => toggleBookmarkHandler()}>
                                             <BookmarkSymbol

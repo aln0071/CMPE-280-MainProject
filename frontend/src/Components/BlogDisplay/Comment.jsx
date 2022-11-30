@@ -12,7 +12,7 @@ export default function Comment({ description, createdAt, userId }) {
     return <div className="comment-container">
         <div className="comment-header">
             <div className="comment-author">{author}</div>
-            <div className="comment-time">{timeString}</div>
+            <div className="comment-time" style={{float: "right"}} >{timeString}</div>
         </div>
         {description}
     </div>

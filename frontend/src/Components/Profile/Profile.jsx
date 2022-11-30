@@ -134,8 +134,8 @@ export default function Profile(props) {
               setFollowButton(false);
             }
             console.log('author', u)
-            setFollowers(u.followers.length)
-            setFollowing(u.following.length)
+            setFollowers((u.followers || []).length)
+            setFollowing((u.following || []).length)
           } else {
             throw new Error('Status code not 200');
           }
@@ -144,8 +144,8 @@ export default function Profile(props) {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
     } else {
-      setFollowers(user.followers.length)
-      setFollowing(user.following.length)
+      setFollowers((user.followers || []).length)
+      setFollowing((user.following || []).length)
       getImage(user.imgKey);
       getBlogs(user.username)
       getBookmarkedBlogsList(user.username)

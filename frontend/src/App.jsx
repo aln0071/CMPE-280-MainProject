@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import BlogEdit from './Components/BlogEdit';
 import BlogListing from './Components/BlogListing';
 import HompageListing from './Components/HompageListing';
+import RelatedGenre from './Components/RelatedGenre'; 
 import Blog from './Components/BlogDisplay/Blog';
 import Profile from './Components/Profile/Profile';
 import './App.css';
@@ -56,6 +57,7 @@ function App() {
           <Route path="/createBlog" element={<BlogEdit />} />
           <Route path="/blogListing" element={<BlogListing />} />
           <Route path="/home" element={<HompageListing />} />
+          <Route path="/relatedReads/:tag" element={<RelatedGenre />} />
           <Route path="/blog/:id" element={<Blog />} />
           <Route exact path="/*" element={<Navigate to="/home" replace />} />
         </Routes>

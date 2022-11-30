@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import EditorCustom from './BlogReadOnly';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -18,6 +18,12 @@ import Badge from 'react-bootstrap/Badge';
 
 function BlogEdit() {
     let params = useParams();
+    let navigate = useNavigate();
+    const tagdisplay = (e,tag) => {
+        e.preventDefault();
+        console.log("her",tag)
+        navigate(`/relatedReads/${tag}`)
+    }
     const [blog, setBlog] = useState({});
     const [error, setError] = useState("");
     const [imageArray, setImage] = useState([]);
@@ -110,7 +116,7 @@ function BlogEdit() {
                                     {selectedTags &&
                                     <div class="d-flex gs4">
                                                     {selectedTags.map(tag => 
-                                                    {return(<Badge bg="secondary" style={{marginLeft:"0.5rem"}} >{tag}</Badge>)})}
+                                                    {return(<div onClick={(e)=>tagdisplay(e,tag)}><Badge bg="secondary" style={{marginLeft:"0.5rem"}} >{tag}</Badge></div>)})}
                                     </div>}
                                     </Form.Label>
                                 </Form.Text>

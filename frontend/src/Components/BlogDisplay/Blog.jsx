@@ -6,21 +6,25 @@ import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Background from "../Background";
 import { getErrorMessage } from "../../utils/utils";
-import { getBlog } from '../../services/blog.service'
+import { getBlog, toggleBookmark } from '../../services/blog.service'
 import { postComment } from "../../services/comment.service";
 import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE } from '../../actions/messages';
 import CommentsList from "./CommentsList";
+import BookmarkSymbol from "./BookmarkSymbol";
+import { addBookmarkAction, removeBookmarkAction } from "../../actions/auth";
 
 function BlogEdit() {
     let params = useParams();
-    const [blog, setBlog] = useState([]);
+    const [blog, setBlog] = useState({});
     const [error, setError] = useState("");
     const [imageArray, setImage] = useState([]);
     const [comment, setComment] = useState('')
-    const { isLoggedIn } = useSelector(state => state.auth);
+    const { isLoggedIn, user } = useSelector(state => state.auth);
     const [isAnonymous, setIsAnonymous] = useState(false || !isLoggedIn);
     const dispatch = useDispatch()
+
+    const isBookmarked = isLoggedIn && user.bookmarks.includes(blog._id);
 
     const handleCommentSubmission = () => {
         postComment(params.id, comment, isAnonymous)
@@ -49,6 +53,23 @@ function BlogEdit() {
             })
     }, [])
 
+    const toggleBookmarkHandler = () => {
+        toggleBookmark(blog._id)
+            .then(response => {
+                if(response.status === 200) {
+                    dispatch(MESSAGE.success(isBookmarked ? "Bookmark removed" : "Bookmark added"))
+                    if(isBookmarked)
+                        dispatch(removeBookmarkAction(blog._id))
+                    else
+                        dispatch(addBookmarkAction(blog._id))
+                } else {
+                    throw new Error("Response status not 200");
+                }
+            }).catch(error => {
+                dispatch(MESSAGE.error(getErrorMessage(error)))
+            })
+    }
+
     return (<div><Background />
         <div style={{ marginTop: '10rem' }}>
             <center>
@@ -57,10 +78,19 @@ function BlogEdit() {
                         <Card.Title>
                             <br></br>
                             <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
-                                <Form.Control type="text"
-                                    className="headingTitle"
-                                    style={{ "fontSize": "3rem" }}
-                                    placeholder={blog.topic} disabled />
+                                <div className="blog-title-readonly">
+                                    <div></div>
+                                    <div>{blog.topic}</div>
+                                    {isLoggedIn ?
+                                        <div className="bookmark-symbol" onClick={() => toggleBookmarkHandler()}>
+                                            <BookmarkSymbol
+                                                filled={isBookmarked}
+                                            />
+                                        </div>
+                                        :
+                                        <div></div>
+                                    }
+                                </div>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Text className="text-muted">

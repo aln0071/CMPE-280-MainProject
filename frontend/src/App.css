@@ -40,3 +40,12 @@
 .recent-blog {
   cursor: pointer;
 }
+
+.blog-title-readonly {
+  display: grid;
+  grid-template-columns: 40px 1fr 40px;
+}
+
+.bookmark-symbol {
+  cursor: pointer;
+}

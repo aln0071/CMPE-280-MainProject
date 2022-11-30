@@ -79,7 +79,17 @@ app.get('/getRecentBlogs/:username', async (req, res) => {
   try {
     const blogs = await blogModel.find({ author: username, annonymusFlag: false })
     res.status(200).json(blogs);
-  } catch(error) {
+  } catch (error) {
+    res.status(400).send(error);
+  }
+})
+
+app.get('/getBookmarkedBlogs/:username', async (req, res) => {
+  const username = req.params.username;
+  try {
+    const blogs = await userModel.findOne({ username }, "bookmarks").populate("bookmarks")
+    res.status(200).json(blogs);
+  } catch (error) {
     res.status(400).send(error);
   }
 })
@@ -175,7 +185,7 @@ app.post('/login', async (req, res) => {
       user.token = token;
       res.status(200).json(user);
     }
-    else if (!user){
+    else if (!user) {
       res.status(400).send("Invalid Credentials");
     }
   } catch (err) {
@@ -183,32 +193,32 @@ app.post('/login', async (req, res) => {
   }
 });
 
-app.put('/updateprofile/:profileid', async(req, res) => {
-  try{
-    const id= req.params.profileid;
-    const {name, aboutme, city, phone, imgKey} = req.body;
+app.put('/updateprofile/:profileid', async (req, res) => {
+  try {
+    const id = req.params.profileid;
+    const { name, aboutme, city, phone, imgKey } = req.body;
     const user = await userModel.updateOne(
-                  { _id: id },
-                  {
-                    $set: {
-                      name: name,
-                      aboutme: aboutme,
-                      city: city,
-                      phone: phone,
-                      imgKey:imgKey
-                    }
-                  }
-                )
-    if (user.matchedCount == 0){
+      { _id: id },
+      {
+        $set: {
+          name: name,
+          aboutme: aboutme,
+          city: city,
+          phone: phone,
+          imgKey: imgKey
+        }
+      }
+    )
+    if (user.matchedCount == 0) {
       res.status(400).send('User Not Found');
     }
-    else if (user.modifiedCount == 0){
+    else if (user.modifiedCount == 0) {
       res.status(400).send('Nothing to Update');
     }
-    else{
+    else {
       res.status(200).send("Updated Successfully");
     }
-  } catch(error) {
+  } catch (error) {
     res.status(500).send(error);
   }
 
@@ -279,6 +289,24 @@ app.get('/comments/:blogid', async (req, res) => {
     .sort({ createdAt: 'descending' })
     .populate("userId", "username");
   res.json(comments);
+})
+
+app.get('/toggleBookmark/:blogid', authMiddleware, async (req, res) => {
+  try {
+    const username = req.user.username;
+    const blogId = req.params.blogid;
+    const user = await userModel.findOne({ username })
+    if (user.bookmarks.includes(blogId)) {
+      const newBookmarks = user.bookmarks.filter(bookmark => bookmark !== blogId);
+      user.bookmarks = newBookmarks;
+    } else {
+      user.bookmarks.push(blogId)
+    }
+    user.save();
+    return res.sendStatus(200);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
 })
 
 app.listen(port, () => console.log("[backend] listening on port " + port));

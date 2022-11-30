@@ -3,7 +3,9 @@ import {
   REGISTER_FAIL,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
-  LOGOUT
+  LOGOUT,
+  ADD_BOOKMARK,
+  REMOVE_BOOKMARK
 } from '../actions/types';
 
 const user = JSON.parse(localStorage.getItem('user'));
@@ -42,6 +44,27 @@ export default function (state = initialState, action) {
         isLoggedIn: false,
         user: null
       };
+    case ADD_BOOKMARK:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          bookmarks: [
+            ...state.user.bookmarks,
+            payload.bookmark
+          ]
+        }
+      }
+    case REMOVE_BOOKMARK:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          bookmarks: [
+            ...state.user.bookmarks.filter(bookmark => bookmark !== payload.bookmark)
+          ]
+        }
+      }
     default:
       return state;
   }

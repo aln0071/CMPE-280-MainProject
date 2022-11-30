@@ -25,7 +25,7 @@ function EditProfile() {
   const hiddenFileInput = React.useRef(null);
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const defaultImg = user.imgKey ? `${URLS.API_URL}${URLS.GET_IMAGE.replace('{key}', user.imgKey)}` :
-    'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp';
+    'dummy.webp';
   console.log(defaultImg)
 
   const [name, setName] = useState(user.name);

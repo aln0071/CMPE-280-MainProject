@@ -35,6 +35,7 @@
 
 .no-blogs-message {
   color: gray;
+  white-space: nowrap;
 }
 
 .recent-blog {

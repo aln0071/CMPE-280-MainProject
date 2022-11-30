@@ -23,11 +23,12 @@ export default function Profile(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const [displayPicture, setDisplayPicture] = useState();
+  const [displayPicture, setDisplayPicture] = useState("dummy.webp");
   const [displayUser, setDisplayUser] = useState(user);
   // can have 4 possible values
   // null => loading, undefined => load failed, [] => no data, array of blogs
   const [blogs, setBlogs] = useState(null);
+  const [blogsAnnon, setBlogsAnnon] = useState(null);
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -48,6 +49,16 @@ export default function Profile(props) {
   };
 
   const getBlogs = async (username) => {
+    try {
+      const blogs = await getBlogsByUser(username);
+      setBlogs(blogs.data);
+    } catch (error) {
+      setBlogs(undefined);
+      dispatch(MESSAGE.error(getErrorMessage(error)));
+    }
+  }
+
+  const getAnnonBlogs = async (username) => {
     try {
       const blogs = await getBlogsByUser(username);
       setBlogs(blogs.data);
@@ -99,7 +110,7 @@ export default function Profile(props) {
                 />
                 <MDBCardBody>
                   <MDBCardTitle>{blog.topic}</MDBCardTitle>
-                  <MDBCardText>
+                  <MDBCardText style={{maxHeight: "15rem", overflow: "hidden"}}>
                     {blog.description}
                   </MDBCardText>
                 </MDBCardBody>
@@ -186,9 +197,9 @@ export default function Profile(props) {
 
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
-                  <div>
-                    <MDBCardText className="mb-1 h5">253</MDBCardText>
-                    <MDBCardText className="small text-muted mb-0">Photos</MDBCardText>
+                <div>
+                    <MDBCardText className="mb-1 h5">{Array.isArray(blogs) && blogs.length}</MDBCardText>
+                    <MDBCardText className="small text-muted mb-0">Blogs</MDBCardText>
                   </div>
                   <div className="px-3">
                     <MDBCardText className="mb-1 h5">1026</MDBCardText>
@@ -202,21 +213,30 @@ export default function Profile(props) {
               </div>
               <MDBCardBody className="text-black p-9">
                 <div className="mb-5">
-                  <p className="lead fw-normal mb-1">About</p>
+                {displayUser.aboutme &&
+                  <><p className="lead fw-normal mb-1">About</p>
                   <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
                     <MDBCardText className="font-italic mb-1">{displayUser.aboutme}</MDBCardText>
-                    <MDBCardText className="font-italic mb-1">Lives in New York</MDBCardText>
-                    <MDBCardText className="font-italic mb-0">Photographer</MDBCardText>
-                  </div>
+                  </div></>}
                 </div>
                 <div className="d-flex justify-content-between align-items-center mb-4">
                   <MDBCardText className="lead fw-normal mb-0">Recent Blogs</MDBCardText>
                   <MDBCardText className="mb-0">
-                    <a href="#!" className="text-muted">
+                    {/* <a href="#!" className="text-muted">
                       Show all
-                    </a>
+                    </a> */}
                   </MDBCardText>
                 </div>
+
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <MDBCardText className="lead fw-normal mb-0">Annonymus Blogs</MDBCardText>
+                  <MDBCardText className="mb-0">
+                    {/* <a href="#!" className="text-muted">
+                      Show all
+                    </a> */}
+                  </MDBCardText>
+                </div>
+
 
                 {/* Start of blogs list */}
                 <div

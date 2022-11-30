@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { MESSAGE } from "../actions/messages";
 import { getErrorMessage } from "../utils/utils";
+import Badge from 'react-bootstrap/Badge';
 
 function BlogEdit(props) {
 
@@ -16,6 +17,8 @@ function BlogEdit(props) {
     const [imageArray, setImage] = useState([]);
     const [error, setError] = useState("");
     const [annon, setAnnon] = React.useState(false);
+    const[tags,setTags]=useState(["Science","Technology","Travel","Thoughts","Romance"])
+    const[selectedTags,setSelectedTags]=useState([])
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { isLoggedIn, user } = useSelector(state => state.auth);
@@ -23,6 +26,34 @@ function BlogEdit(props) {
     const trim = (x) => {
         return x.replace(/^\s+|\s+$/gm, '');
     }
+    const deleteTag = (e,val) =>{
+        e.preventDefault()
+        console.log("Deleting Tag : ",e)
+        var localSelectedTags = selectedTags.slice(0,)
+        const index = localSelectedTags.indexOf(val);
+        console.log("Deleting Tag : ",val)
+        if (index > -1) {
+          localSelectedTags.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        setSelectedTags(localSelectedTags)
+        console.log(selectedTags)
+      }
+    
+    
+      const chooseOther = function(e){
+        e.preventDefault();
+        var incominTag = e.target.value;
+        console.log(selectedTags.includes(incominTag))
+        if(selectedTags.includes(incominTag)==false){
+        console.log(incominTag)
+        // if(true){
+          var localSelectedTags = selectedTags.slice()
+          localSelectedTags.push(incominTag)
+          setSelectedTags(localSelectedTags)
+          console.log(selectedTags)
+        }
+    }
+
 
     const submitHandler = (e) => {
         console.log(e);
@@ -37,7 +68,7 @@ function BlogEdit(props) {
                 description: descripiton,
                 author: "Anonymous User",
                 annonymusFlag: e.target.formBasicCheckbox.checked,
-                tags: [],
+                tags: selectedTags,
                 comments: []
             }
 
@@ -84,6 +115,20 @@ function BlogEdit(props) {
                                 <br></br>
                                 <EditorCustom setDescription={setDescription} setImage={setImage} color="#EDE1ED"></EditorCustom>
                                 <br></br>
+                                <Form.Text className="text-muted">
+                                        <Form.Label  style={{float:"left"}}>Add tags to make your blog more discoverable</Form.Label>
+                                    <Form.Group className="mb-3" controlId="formBasicTags" onChange={e=>chooseOther(e)}>
+                                    <Form.Control as="select">
+                                            {tags.map ( tag =>{
+                                            return(
+                                            <option value={tag} >{tag}</option>)})}
+                                        </Form.Control>
+                                    </Form.Group>
+                                    </Form.Text>
+                                    <div class="d-flex gs4">
+                                    {selectedTags.map(tag => 
+                                    {return(<Badge bg="secondary" style={{marginLeft:"0.5rem"}} >{tag} <div val={tag} style={{float:"right",paddingLeft:"1rem"}} onClick={(e)=>deleteTag(e,tag)}>X</div></Badge>)})}
+                                </div>
                                 {error && <div style={{ color: "red" }}>
                                     {error}
                                 </div>}

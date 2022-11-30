@@ -12,3 +12,5 @@ export const updateUser = (userId, name, aboutme, city, phone, imgKey) =>
     phone,
     imgKey
   });
+
+export const followUser = (userId, authorId) => axios.put(`${API_URL}follow/${userId}/${authorId}`);

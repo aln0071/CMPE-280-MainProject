@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import {
   MDBCol,
@@ -13,11 +14,11 @@ import {
 } from 'mdb-react-ui-kit';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUser } from '../../services/user.service';
+import { getUser, followUser } from '../../services/user.service';
 import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
-import { getBlogsByUser } from '../../services/blog.service';
+import { getBlogsByUser, getBookmarkedBlogs } from '../../services/blog.service';
 
 export default function Profile(props) {
   const navigate = useNavigate();
@@ -30,7 +31,10 @@ export default function Profile(props) {
   // can have 4 possible values
   // null => loading, undefined => load failed, [] => no data, array of blogs
   const [blogs, setBlogs] = useState(null);
-  const [blogsAnnon, setBlogsAnnon] = useState(null);
+  const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
+  const [followButton, setFollowButton] = useState(true);
+  const [followers, setFollowers] = useState(user.followers.length);
+  const [following, setFollowing] = useState(user.following.length); 
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -60,16 +64,25 @@ export default function Profile(props) {
     }
   }
 
-  const getAnnonBlogs = async (username) => {
+  const getBookmarkedBlogsList = async (username) => {
     try {
-      const blogs = await getBlogsByUser(username);
-      setBlogs(blogs.data);
-    } catch (error) {
-      setBlogs(undefined);
-      dispatch(MESSAGE.error(getErrorMessage(error)));
+      const blogs = await getBookmarkedBlogs(username);
+      setBookmarkedBlogs(blogs.data.bookmarks);
+    } catch(error) {
+      setBookmarkedBlogs(undefined);
+      dispatch(MESSAGE.error(getErrorMessage(error)))
     }
   }
 
+  const follow = async (userId, authorId) => {
+    try {
+      await followUser(userId, authorId);
+      setFollowButton(false);
+    } catch (error) {
+      setFollowButton(true);
+      dispatch(MESSAGE.error(getErrorMessage(error)))
+    }
+  }
   useEffect(() => {
     console.log(location);
     if (author) {
@@ -77,11 +90,16 @@ export default function Profile(props) {
       getUser(author)
         .then((response) => {
           if (response.status === 200) {
-            console.log(response.data);
-            setDisplayUser(response.data);
-            getImage(response.data.imgKey);
+            const u = response.data;
+            setDisplayUser(u);
+            getImage(u.imgKey);
             getBlogs(author);
-      
+            getBookmarkedBlogsList(author);
+            if (u.followers.includes(user._id)) {
+              setFollowButton(false);
+            }
+            setFollowers(u.followers.length)
+            setFollowing(u.following.length)
           } else {
             throw new Error('Status code not 200');
           }
@@ -89,22 +107,26 @@ export default function Profile(props) {
         .catch((error) => {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
+
     } else {
       getImage(user.imgKey);
-      getBlogs(user.username);
+      getBlogs(user.username)
+      getBookmarkedBlogsList(user.username)
     }
   }, []);
 
-  const renderBlogList = () => {
-    if (blogs === null) {
+  const renderBlogList = (blogList, bookmarked = false) => {
+    if (blogList === null) {
       return "Loading..."
-    } else if (blogs === undefined) {
-      return <div>Loading failed. <button onClick={() => getBlogs()}>Retry</button></div>
-    } else if (Array.isArray(blogs)) {
-      if (blogs.length === 0) {
-        return <div className='no-blogs-message'>No blogs from this user</div>
+    } else if (blogList === undefined) {
+      return <div>Loading failed. <button onClick={() => {getBlogs(); getBookmarkedBlogs()}}>Retry</button></div>
+    } else if (Array.isArray(blogList)) {
+      if (blogList.length === 0) {
+        return <div className='no-blogs-message'>
+          {bookmarked ? <>No bookmarked blogs</> : <>No blogs from this user</>}
+          </div>
       } else {
-        return blogs.map(blog => {
+        return blogList.map(blog => {
           return (
             <MDBCol key={blog._id}>
               <MDBCard onClick={() => navigate(`/blog/${blog._id}`)} className="recent-blog">
@@ -140,13 +162,13 @@ export default function Profile(props) {
             overflow: 'visible',
             width: '150px',
             marginTop: '10px',
-            zIndex: '1'
+            zIndex: '1',
+            border: '2px solid black'   
           }}
-          onClick={() => {
-            // navigate('/editProfile');
-          }}
+          disabled={!followButton}
+          onClick={() => { follow(user._id, displayUser._id)}}
         >
-          Follow
+          {followButton?'Follow':'Following'}
         </MDBBtn>
       );
     }
@@ -207,11 +229,11 @@ export default function Profile(props) {
                     <MDBCardText className="small text-muted mb-0">Blogs</MDBCardText>
                   </div>
                   <div className="px-3">
-                    <MDBCardText className="mb-1 h5">1026</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{followers}</MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Followers</MDBCardText>
                   </div>
                   <div>
-                    <MDBCardText className="mb-1 h5">478</MDBCardText>
+                    <MDBCardText className="mb-1 h5">{following}</MDBCardText>
                     <MDBCardText className="small text-muted mb-0">Following</MDBCardText>
                   </div>
                 </div>
@@ -250,10 +272,28 @@ export default function Profile(props) {
                 >
                   <MDBRow className="row-cols-4 row-cols-md-3 g-4">
                     {
-                      renderBlogList()
+                      renderBlogList(blogs)
                     }
                   </MDBRow>
                 </div>
+                {/* End of blogs list */}
+
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <MDBCardText className="lead fw-normal mb-0">Bookmarked Blogs</MDBCardText>
+                </div>
+
+                {/* Start of blogs list */}
+                <div
+                  className="d-flex justify-content-between align-items-center mb-4"
+                  style={{ backgroundColor: '#f8f9fa' }}
+                >
+                  <MDBRow className="row-cols-4 row-cols-md-3 g-4">
+                    {
+                      renderBlogList(bookmakredBlogs, true)
+                    }
+                  </MDBRow>
+                </div>
+                {/* End of blogs list */}
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

@@ -7,21 +7,28 @@ import Form from 'react-bootstrap/Form';
 import { Link } from 'react-router-dom'; 
 import Background from "../Background";
 import { getErrorMessage } from "../../utils/utils";
-import { getBlog } from '../../services/blog.service'
+import { getBlog, toggleBookmark } from '../../services/blog.service'
 import { postComment } from "../../services/comment.service";
 import { useDispatch, useSelector } from 'react-redux';
 import { MESSAGE } from '../../actions/messages';
 import CommentsList from "./CommentsList";
+import BookmarkSymbol from "./BookmarkSymbol";
+import { addBookmarkAction, removeBookmarkAction } from "../../actions/auth";
+import Badge from 'react-bootstrap/Badge';
 
 function BlogEdit() {
     let params = useParams();
-    const [blog, setBlog] = useState([]);
+    const [blog, setBlog] = useState({});
     const [error, setError] = useState("");
     const [imageArray, setImage] = useState([]);
+    const[tags,setTags]=useState(["Science","Technology","Travel","Thoughts","Romance"])
+    const[selectedTags,setSelectedTags]=useState([])
     const [comment, setComment] = useState('')
-    const { isLoggedIn } = useSelector(state => state.auth);
+    const { isLoggedIn, user } = useSelector(state => state.auth);
     const [isAnonymous, setIsAnonymous] = useState(false || !isLoggedIn);
     const dispatch = useDispatch()
+
+    const isBookmarked = isLoggedIn && user.bookmarks.includes(blog._id);
 
     const handleCommentSubmission = () => {
         postComment(params.id, comment, isAnonymous)
@@ -42,6 +49,7 @@ function BlogEdit() {
             .then(response => {
                 if(response.status === 200) {
                     setBlog(response.data);
+                    setSelectedTags(response.data.tags)
                 } else {
                     throw new Error("Status code not 200");
                 }
@@ -49,6 +57,23 @@ function BlogEdit() {
                 setError(getErrorMessage(error));
             })
     }, [])
+
+    const toggleBookmarkHandler = () => {
+        toggleBookmark(blog._id)
+            .then(response => {
+                if(response.status === 200) {
+                    dispatch(MESSAGE.success(isBookmarked ? "Bookmark removed" : "Bookmark added"))
+                    if(isBookmarked)
+                        dispatch(removeBookmarkAction(blog._id))
+                    else
+                        dispatch(addBookmarkAction(blog._id))
+                } else {
+                    throw new Error("Response status not 200");
+                }
+            }).catch(error => {
+                dispatch(MESSAGE.error(getErrorMessage(error)))
+            })
+    }
 
     return (<div><Background />
         <div style={{ marginTop: '10rem' }}>
@@ -58,7 +83,19 @@ function BlogEdit() {
                         <Card.Title>
                             <br></br>
                             <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
-                                <div style={{ "fontSize": "3rem","color": "grey" }}>{blog.topic} </div>
+                                <div className="blog-title-readonly">
+                                    <div></div>
+                                    <div style={{ "fontSize": "3rem","color": "grey" }}>{blog.topic}</div>
+                                    {isLoggedIn ?
+                                        <div className="bookmark-symbol" onClick={() => toggleBookmarkHandler()}>
+                                            <BookmarkSymbol
+                                                filled={isBookmarked}
+                                            />
+                                        </div>
+                                        :
+                                        <div></div>
+                                    }
+                                </div>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Text className="text-muted">
@@ -68,7 +105,13 @@ function BlogEdit() {
                                          {blog.author}
                                     </Link>
                 
-                                      )}
+                                      )}                                    <br></br>
+                                    <br></br>
+                                    {selectedTags &&
+                                    <div class="d-flex gs4">
+                                                    {selectedTags.map(tag => 
+                                                    {return(<Badge bg="secondary" style={{marginLeft:"0.5rem"}} >{tag}</Badge>)})}
+                                    </div>}
                                     </Form.Label>
                                 </Form.Text>
                             </Form.Group>
@@ -81,8 +124,6 @@ function BlogEdit() {
                                 {error}
                             </div>}
                         </Card.Text>
-                        <br></br>
-                        <br></br>
                     </Card.Body>
                     { error === "" && <Card.Footer>
                         <div style={{ textAlign: 'left' }}>

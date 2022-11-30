@@ -62,7 +62,12 @@ function BlogEdit() {
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Text className="text-muted">
                                     <Form.Label>-
-                                        {blog.annonymusFlag ? "Annon" : blog.author}
+                                    {blog.annonymusFlag ? 'Annon' : (
+                                     <Link to="/profile" state={{ author:`${blog.author}` }}>
+                                         {blog.author}
+                                    </Link>
+                
+                                      )}
                                     </Form.Label>
                                 </Form.Text>
                             </Form.Group>

@@ -11,7 +11,7 @@ import {
   MDBTypography,
   MDBCardTitle
 } from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getUser } from '../../services/user.service';
 import { getImageStream } from '../../services/image.service';
@@ -22,8 +22,10 @@ import { getBlogsByUser } from '../../services/blog.service';
 export default function Profile(props) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const author = location.state?location.state.author:'';
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const [displayPicture, setDisplayPicture] = useState("dummy.webp");
+  const [displayPicture, setDisplayPicture] = useState("dummy.webp"); 
   const [displayUser, setDisplayUser] = useState(user);
   // can have 4 possible values
   // null => loading, undefined => load failed, [] => no data, array of blogs
@@ -69,12 +71,17 @@ export default function Profile(props) {
   }
 
   useEffect(() => {
-    if (props && props.username) {
-      getUser(props.username)
+    console.log(location);
+    if (author) {
+      console.log(author);
+      getUser(author)
         .then((response) => {
           if (response.status === 200) {
             console.log(response.data);
             setDisplayUser(response.data);
+            getImage(response.data.imgKey);
+            getBlogs(author);
+      
           } else {
             throw new Error('Status code not 200');
           }
@@ -82,11 +89,9 @@ export default function Profile(props) {
         .catch((error) => {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
-      getImage(props.imgKey);
-      getBlogs(props.username)
     } else {
       getImage(user.imgKey);
-      getBlogs(user.username)
+      getBlogs(user.username);
     }
   }, []);
 
@@ -124,7 +129,7 @@ export default function Profile(props) {
   }
 
   const button = () => {
-    if (props && props.userId) {
+    if (author) {
       return (
         <MDBBtn
           outline

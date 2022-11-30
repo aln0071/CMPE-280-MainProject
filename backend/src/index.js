@@ -171,7 +171,9 @@ app.post('/login', async (req, res) => {
     if (!(username && password)) {
       res.status(400).send("All input is required");
     }
-    const user = await userModel.findOne({ username: username });
+    const user = await userModel.findOne({ username: username })
+    .populate("followers", ["username", "imgKey", "name"])
+    .populate("following", ["username", "imgKey", "name"]);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
@@ -227,7 +229,10 @@ app.put('/updateprofile/:profileid', async (req, res) => {
 app.get('/user/:username', async (req, res) => {
   const username = req.params.username;
   const query = { username: username };
-  const user = await userModel.findOne(query).then(userResponse => {
+  const user = await userModel.findOne(query)
+  .populate("followers", ["username", "imgKey", "name"])
+  .populate("following", ["username", "imgKey", "name"])
+  .then(userResponse => {
     res.status(200).json(userResponse)
   })
     .catch(error => {

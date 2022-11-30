@@ -10,10 +10,13 @@ import {
   MDBCardImage,
   MDBBtn,
   MDBTypography,
-  MDBCardTitle
+  MDBCardTitle,
+  MDBListGroup
 } from 'mdb-react-ui-kit';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import BlogList from './BlogList';
+import UserList from './UserList';
 import { getUser, followUser } from '../../services/user.service';
 import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
@@ -28,13 +31,13 @@ export default function Profile(props) {
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const [displayPicture, setDisplayPicture] = useState("dummy.webp"); 
   const [displayUser, setDisplayUser] = useState(user);
-  // can have 4 possible values
-  // null => loading, undefined => load failed, [] => no data, array of blogs
+
   const [blogs, setBlogs] = useState(null);
   const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
   const [followButton, setFollowButton] = useState(true);
   const [followers, setFollowers] = useState(user.followers.length);
   const [following, setFollowing] = useState(user.following.length); 
+  const [active, setActive] = useState('blogs')
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -84,13 +87,14 @@ export default function Profile(props) {
     }
   }
   useEffect(() => {
+    // window.location.reload();
     console.log(location);
     if (author) {
-      console.log(author);
       getUser(author)
         .then((response) => {
           if (response.status === 200) {
             const u = response.data;
+            console.log(u)
             setDisplayUser(u);
             getImage(u.imgKey);
             getBlogs(author);
@@ -113,45 +117,28 @@ export default function Profile(props) {
       getBlogs(user.username)
       getBookmarkedBlogsList(user.username)
     }
-  }, []);
+  }, [location]);
 
-  const renderBlogList = (blogList, bookmarked = false) => {
-    if (blogList === null) {
-      return "Loading..."
-    } else if (blogList === undefined) {
-      return <div>Loading failed. <button onClick={() => {getBlogs(); getBookmarkedBlogs()}}>Retry</button></div>
-    } else if (Array.isArray(blogList)) {
-      if (blogList.length === 0) {
-        return <div className='no-blogs-message'>
-          {bookmarked ? <>No bookmarked blogs</> : <>No blogs from this user</>}
-          </div>
-      } else {
-        return blogList.map(blog => {
-          return (
-            <MDBCol key={blog._id}>
-              <MDBCard onClick={() => navigate(`/blog/${blog._id}`)} className="recent-blog">
-                <MDBCardImage
-                  src="https://mdbootstrap.com/img/new/standard/city/041.webp"
-                  alt="..."
-                  position="top"
-                />
-                <MDBCardBody>
-                  <MDBCardTitle>{blog.topic}</MDBCardTitle>
-                  <MDBCardText style={{maxHeight: "15rem", overflow: "hidden"}}>
-                    {blog.description}
-                  </MDBCardText>
-                </MDBCardBody>
-              </MDBCard>
-            </MDBCol>
-          )
-        })
-      }
-    }
-    return "unhandled exception";
+  const renderUserList = (users) =>
+  {
+    return(
+      <>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <MDBCardText className="lead fw-normal mb-0">{active==='followers'?"Followers":"Following"}</MDBCardText>
+      </div>
+      <MDBListGroup style={{ minWidth: '40rem' }} light>
+     { users.map((user) => {
+
+       return (<UserList user={user} />);
+      })}
+      </MDBListGroup>
+      </>
+    ) 
+ 
   }
 
   const button = () => {
-    if (author) {
+    if (author && author!==user.username) {
       return (
         <MDBBtn
           outline
@@ -225,75 +212,36 @@ export default function Profile(props) {
               <div className="p-4 text-black" style={{ backgroundColor: '#f8f9fa' }}>
                 <div className="d-flex justify-content-end text-center py-1">
                 <div>
-                    <MDBCardText className="mb-1 h5">{Array.isArray(blogs) && blogs.length}</MDBCardText>
+                  <button className='button-link' onClick={()=> {setActive('main')}}>
+                    <MDBCardText className="mb-1 h5">{Array.isArray(blogs) && blogs.length}</MDBCardText></button>
                     <MDBCardText className="small text-muted mb-0">Blogs</MDBCardText>
                   </div>
                   <div className="px-3">
-                    <MDBCardText className="mb-1 h5">{followers}</MDBCardText>
+                    <button className='button-link' onClick={()=> {setActive('followers')}}>
+                    <MDBCardText className="mb-1 h5">{followers}</MDBCardText></button>
                     <MDBCardText className="small text-muted mb-0">Followers</MDBCardText>
                   </div>
                   <div>
-                    <MDBCardText className="mb-1 h5">{following}</MDBCardText>
+                    <button className='button-link' onClick={()=> {setActive('following')}}>
+                    <MDBCardText className="mb-1 h5">{following}</MDBCardText> </button>
                     <MDBCardText className="small text-muted mb-0">Following</MDBCardText>
                   </div>
                 </div>
               </div>
+
+              <div className="mb-5" style={{padding:'7px'}}>
+                {displayUser.aboutme && (
+                <>
+                    <p className="lead fw-normal mb-1">About</p>
+                    <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
+                      <MDBCardText className="font-italic mb-1">{displayUser.aboutme}</MDBCardText>
+                    </div>
+                  </>)}
+              </div>
               <MDBCardBody className="text-black p-9">
-                <div className="mb-5">
-                {displayUser.aboutme &&
-                  <><p className="lead fw-normal mb-1">About</p>
-                  <div className="p-4" style={{ backgroundColor: '#f8f9fa' }}>
-                    <MDBCardText className="font-italic mb-1">{displayUser.aboutme}</MDBCardText>
-                  </div></>}
-                </div>
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <MDBCardText className="lead fw-normal mb-0">Recent Blogs</MDBCardText>
-                  <MDBCardText className="mb-0">
-                    {/* <a href="#!" className="text-muted">
-                      Show all
-                    </a> */}
-                  </MDBCardText>
-                </div>
-
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <MDBCardText className="lead fw-normal mb-0">Annonymus Blogs</MDBCardText>
-                  <MDBCardText className="mb-0">
-                    {/* <a href="#!" className="text-muted">
-                      Show all
-                    </a> */}
-                  </MDBCardText>
-                </div>
-
-
-                {/* Start of blogs list */}
-                <div
-                  className="d-flex justify-content-between align-items-center mb-4"
-                  style={{ backgroundColor: '#f8f9fa' }}
-                >
-                  <MDBRow className="row-cols-4 row-cols-md-3 g-4">
-                    {
-                      renderBlogList(blogs)
-                    }
-                  </MDBRow>
-                </div>
-                {/* End of blogs list */}
-
-                <div className="d-flex justify-content-between align-items-center mb-4">
-                  <MDBCardText className="lead fw-normal mb-0">Bookmarked Blogs</MDBCardText>
-                </div>
-
-                {/* Start of blogs list */}
-                <div
-                  className="d-flex justify-content-between align-items-center mb-4"
-                  style={{ backgroundColor: '#f8f9fa' }}
-                >
-                  <MDBRow className="row-cols-4 row-cols-md-3 g-4">
-                    {
-                      renderBlogList(bookmakredBlogs, true)
-                    }
-                  </MDBRow>
-                </div>
-                {/* End of blogs list */}
+                {active === 'main' && (<BlogList blogs={blogs} bookmakredBlogs={bookmakredBlogs} displayUser={displayUser}/>)}
+                {active === 'followers' && renderUserList(displayUser.followers)}
+                {active === 'following' && renderUserList(displayUser.following)}
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

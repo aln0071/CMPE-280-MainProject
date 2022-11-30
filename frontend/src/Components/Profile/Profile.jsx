@@ -17,7 +17,7 @@ import { getUser } from '../../services/user.service';
 import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
-import { getBlogsByUser } from '../../services/blog.service';
+import { getBlogsByUser, getBookmarkedBlogs } from '../../services/blog.service';
 
 export default function Profile(props) {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function Profile(props) {
   // can have 4 possible values
   // null => loading, undefined => load failed, [] => no data, array of blogs
   const [blogs, setBlogs] = useState(null);
-  const [blogsAnnon, setBlogsAnnon] = useState(null);
+  const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -58,13 +58,13 @@ export default function Profile(props) {
     }
   }
 
-  const getAnnonBlogs = async (username) => {
+  const getBookmarkedBlogsList = async (username) => {
     try {
-      const blogs = await getBlogsByUser(username);
-      setBlogs(blogs.data);
-    } catch (error) {
-      setBlogs(undefined);
-      dispatch(MESSAGE.error(getErrorMessage(error)));
+      const blogs = await getBookmarkedBlogs(username);
+      setBookmarkedBlogs(blogs.data.bookmarks);
+    } catch(error) {
+      setBookmarkedBlogs(undefined);
+      dispatch(MESSAGE.error(getErrorMessage(error)))
     }
   }
 
@@ -84,22 +84,26 @@ export default function Profile(props) {
         });
       getImage(props.imgKey);
       getBlogs(props.username)
+      getBookmarkedBlogsList(props.username)
     } else {
       getImage(user.imgKey);
       getBlogs(user.username)
+      getBookmarkedBlogsList(user.username)
     }
   }, []);
 
-  const renderBlogList = () => {
-    if (blogs === null) {
+  const renderBlogList = (blogList, bookmarked = false) => {
+    if (blogList === null) {
       return "Loading..."
-    } else if (blogs === undefined) {
-      return <div>Loading failed. <button onClick={() => getBlogs()}>Retry</button></div>
-    } else if (Array.isArray(blogs)) {
-      if (blogs.length === 0) {
-        return <div className='no-blogs-message'>No blogs from this user</div>
+    } else if (blogList === undefined) {
+      return <div>Loading failed. <button onClick={() => {getBlogs(); getBookmarkedBlogs()}}>Retry</button></div>
+    } else if (Array.isArray(blogList)) {
+      if (blogList.length === 0) {
+        return <div className='no-blogs-message'>
+          {bookmarked ? <>No bookmarked blogs</> : <>No blogs from this user</>}
+          </div>
       } else {
-        return blogs.map(blog => {
+        return blogList.map(blog => {
           return (
             <MDBCol key={blog._id}>
               <MDBCard onClick={() => navigate(`/blog/${blog._id}`)} className="recent-blog">
@@ -245,10 +249,28 @@ export default function Profile(props) {
                 >
                   <MDBRow className="row-cols-4 row-cols-md-3 g-4">
                     {
-                      renderBlogList()
+                      renderBlogList(blogs)
                     }
                   </MDBRow>
                 </div>
+                {/* End of blogs list */}
+
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <MDBCardText className="lead fw-normal mb-0">Bookmarked Blogs</MDBCardText>
+                </div>
+
+                {/* Start of blogs list */}
+                <div
+                  className="d-flex justify-content-between align-items-center mb-4"
+                  style={{ backgroundColor: '#f8f9fa' }}
+                >
+                  <MDBRow className="row-cols-4 row-cols-md-3 g-4">
+                    {
+                      renderBlogList(bookmakredBlogs, true)
+                    }
+                  </MDBRow>
+                </div>
+                {/* End of blogs list */}
               </MDBCardBody>
             </MDBCard>
           </MDBCol>

@@ -4,6 +4,8 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  ADD_BOOKMARK,
+  REMOVE_BOOKMARK,
 } from './types';
 
 import AuthService from '../services/auth.service';
@@ -66,3 +68,16 @@ export const logout = () => (dispatch) => {
   });
 };
 
+export const addBookmarkAction = bookmark => ({
+  type: ADD_BOOKMARK,
+  payload: {
+    bookmark
+  }
+})
+
+export const removeBookmarkAction = bookmark => ({
+  type: REMOVE_BOOKMARK,
+  payload: {
+    bookmark
+  }
+})

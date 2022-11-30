@@ -28,6 +28,7 @@ export default function Profile(props) {
   const dispatch = useDispatch();
   const location = useLocation();
   const author = location.state?location.state.author:'';
+  console.log(location, author)
   const { isLoggedIn, user } = useSelector((state) => state.auth);
   const [displayPicture, setDisplayPicture] = useState("dummy.webp"); 
   const [displayUser, setDisplayUser] = useState(user);
@@ -35,9 +36,9 @@ export default function Profile(props) {
   const [blogs, setBlogs] = useState(null);
   const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
   const [followButton, setFollowButton] = useState(true);
-  const [followers, setFollowers] = useState(user.followers.length);
-  const [following, setFollowing] = useState(user.following.length); 
-  const [active, setActive] = useState('blogs')
+  const [followers, setFollowers] = useState();
+  const [following, setFollowing] = useState(); 
+  const [active, setActive] = useState('main')
 
   const getImage = (imgKey) => {
     getImageStream(imgKey)
@@ -81,6 +82,7 @@ export default function Profile(props) {
     try {
       await followUser(userId, authorId);
       setFollowButton(false);
+      setFollowing(following+1);
     } catch (error) {
       setFollowButton(true);
       dispatch(MESSAGE.error(getErrorMessage(error)))
@@ -88,7 +90,7 @@ export default function Profile(props) {
   }
   useEffect(() => {
     // window.location.reload();
-    console.log(location);
+    console.log("location", location);
     if (author) {
       getUser(author)
         .then((response) => {
@@ -102,7 +104,7 @@ export default function Profile(props) {
             getBlogs(author);
             getBookmarkedBlogsList(author);
 
-            if (f.includes(user.username)) {
+            if (f.length > 0 && f.includes(user.username)) {
               setFollowButton(false);
             }
             setFollowers(u.followers.length)
@@ -114,13 +116,14 @@ export default function Profile(props) {
         .catch((error) => {
           dispatch(MESSAGE.error(getErrorMessage(error)));
         });
-
     } else {
+      setFollowers(user.followers.length)
+      setFollowing(user.following.length)
       getImage(user.imgKey);
       getBlogs(user.username)
       getBookmarkedBlogsList(user.username)
     }
-  }, [location]);
+  }, [location, location.state]);
 
   const renderUserList = (users) =>
   {
@@ -186,6 +189,7 @@ export default function Profile(props) {
 
   return (
     <div className="gradient-custom-2">
+      {console.log(displayUser)}
       <MDBContainer className="py-5 h-100">
         <MDBRow className="justify-content-center align-items-center h-100">
           <MDBCol lg="9" xl="7">

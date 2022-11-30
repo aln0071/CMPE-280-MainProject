@@ -187,7 +187,7 @@ export default function Profile(props) {
     );
   };
 
-  return (
+  return (displayUser &&
     <div className="gradient-custom-2">
       {console.log(displayUser)}
       <MDBContainer className="py-5 h-100">

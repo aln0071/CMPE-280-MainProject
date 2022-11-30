@@ -9,11 +9,13 @@ import {
 import AuthService from '../services/auth.service';
 import { MESSAGE_TYPE } from '../reducers/message';
 import { MESSAGE } from './messages';
-
 export const register = (username, email, password) => (dispatch) => AuthService.register(username, email, password).then(
   (response) => {
+    console.log(response)
     dispatch({
-      type: REGISTER_SUCCESS
+      type: REGISTER_SUCCESS,
+      payload: { user: response }
+
     });
 
     dispatch(MESSAGE.success("User registered successfully"))

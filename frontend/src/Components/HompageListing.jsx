@@ -41,7 +41,7 @@ function HomepageListing() {
           },    borderRadius: "77px"}}>
         <Card.Body className="pt-5">
             <center>
-            {tag}
+            #{tag}
             </center>
         </Card.Body>
         </Card></div>

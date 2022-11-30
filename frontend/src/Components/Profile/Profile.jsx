@@ -36,8 +36,8 @@ export default function Profile(props) {
   const [blogs, setBlogs] = useState(null);
   const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
   const [followButton, setFollowButton] = useState(true);
-  const [followers, setFollowers] = useState();
-  const [following, setFollowing] = useState(); 
+  const [followers, setFollowers] = useState(0);
+  const [following, setFollowing] = useState(0); 
   const [active, setActive] = useState('main')
 
   const getImage = (imgKey) => {
@@ -104,9 +104,10 @@ export default function Profile(props) {
             getBlogs(author);
             getBookmarkedBlogsList(author);
 
-            if (f.length > 0 && f.includes(user.username)) {
+            if (f.length > 0 && isLoggedIn && f.includes(user.username)) {
               setFollowButton(false);
             }
+            console.log('author', u)
             setFollowers(u.followers.length)
             setFollowing(u.following.length)
           } else {

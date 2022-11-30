@@ -28,9 +28,9 @@ export default function Profile(props) {
   const dispatch = useDispatch();
   const location = useLocation();
   const author = location.state?location.state.author:'';
-  console.log(location, author)
+  const defaultImg = "dummy.webp";
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const [displayPicture, setDisplayPicture] = useState("dummy.webp"); 
+  const [displayPicture, setDisplayPicture] = useState(defaultImg); 
   const [displayUser, setDisplayUser] = useState(user);
 
   const [blogs, setBlogs] = useState(null);
@@ -41,7 +41,11 @@ export default function Profile(props) {
   const [active, setActive] = useState('main')
 
   const getImage = (imgKey) => {
-    getImageStream(imgKey)
+    if(!imgKey){
+      setDisplayPicture(defaultImg)
+    }
+    else{
+      getImageStream(imgKey)
       .then((response) => {
         if (response.status === 200) {
           const chunks = response.data;
@@ -56,6 +60,8 @@ export default function Profile(props) {
       .catch((error) => {
         dispatch(MESSAGE.error(getErrorMessage(error)));
       });
+    }
+ 
   };
 
   const getBlogs = async (username) => {

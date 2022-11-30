@@ -13,12 +13,15 @@ import { MESSAGE } from '../../actions/messages';
 import CommentsList from "./CommentsList";
 import BookmarkSymbol from "./BookmarkSymbol";
 import { addBookmarkAction, removeBookmarkAction } from "../../actions/auth";
+import Badge from 'react-bootstrap/Badge';
 
 function BlogEdit() {
     let params = useParams();
     const [blog, setBlog] = useState({});
     const [error, setError] = useState("");
     const [imageArray, setImage] = useState([]);
+    const[tags,setTags]=useState(["Science","Technology","Travel","Thoughts","Romance"])
+    const[selectedTags,setSelectedTags]=useState([])
     const [comment, setComment] = useState('')
     const { isLoggedIn, user } = useSelector(state => state.auth);
     const [isAnonymous, setIsAnonymous] = useState(false || !isLoggedIn);
@@ -45,6 +48,7 @@ function BlogEdit() {
             .then(response => {
                 if(response.status === 200) {
                     setBlog(response.data);
+                    setSelectedTags(response.data.tags)
                 } else {
                     throw new Error("Status code not 200");
                 }
@@ -96,6 +100,13 @@ function BlogEdit() {
                                 <Form.Text className="text-muted">
                                     <Form.Label>-
                                         {blog.annonymusFlag ? "Annon" : blog.author}
+                                    <br></br>
+                                    <br></br>
+                                    {selectedTags &&
+                                    <div class="d-flex gs4">
+                                                    {selectedTags.map(tag => 
+                                                    {return(<Badge bg="secondary" style={{marginLeft:"0.5rem"}} >{tag}</Badge>)})}
+                                    </div>}
                                     </Form.Label>
                                 </Form.Text>
                             </Form.Group>
@@ -108,8 +119,6 @@ function BlogEdit() {
                                 {error}
                             </div>}
                         </Card.Text>
-                        <br></br>
-                        <br></br>
                     </Card.Body>
                     { error === "" && <Card.Footer>
                         <div style={{ textAlign: 'left' }}>

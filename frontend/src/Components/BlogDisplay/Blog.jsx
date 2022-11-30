@@ -57,10 +57,7 @@ function BlogEdit() {
                         <Card.Title>
                             <br></br>
                             <Form.Group className="mb-3 customHeader" controlId="formBasicTitle">
-                                <Form.Control type="text"
-                                    className="headingTitle"
-                                    style={{ "fontSize": "3rem" }}
-                                    placeholder={blog.topic} disabled />
+                                <div style={{ "fontSize": "3rem","color": "grey" }}>{blog.topic} </div>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Text className="text-muted">

@@ -57,7 +57,7 @@ export default function BlogList(props) {
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      {Array.isArray(blogs) && blogs.length>0 && <><div className="d-flex justify-content-between align-items-center mb-4">
         <MDBCardText className="lead fw-normal mb-0">Recent Blogs</MDBCardText>
         <MDBCardText className="mb-0">
           {/* <a href="#!" className="text-muted">
@@ -70,9 +70,9 @@ export default function BlogList(props) {
         style={{ backgroundColor: '#f8f9fa' }}
       >
         <MDBRow className="row-cols-4 row-cols-md-3 g-4">{renderBlogList(blogs)}</MDBRow>
-      </div>
+      </div></>}
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      {Array.isArray(annonBlogs) && annonBlogs.length>0 && <><div className="d-flex justify-content-between align-items-center mb-4">
         <MDBCardText className="lead fw-normal mb-0">Annonymus Blogs</MDBCardText>
         <MDBCardText className="mb-0">
           {/* <a href="#!" className="text-muted">
@@ -87,7 +87,7 @@ export default function BlogList(props) {
         style={{ backgroundColor: '#f8f9fa' }}
       >
         <MDBRow className="row-cols-4 row-cols-md-3 g-4">{renderBlogList(annonBlogs)}</MDBRow>
-      </div>
+      </div></>}
       {/* End of blogs list */}
 
       <div className="d-flex justify-content-between align-items-center mb-4">

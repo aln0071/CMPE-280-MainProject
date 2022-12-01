@@ -1,11 +1,10 @@
 import axios from 'axios';
-
-const API_URL = 'http://localhost:3001/';
+import URLS from './urls'
 
 export const uploadImage = file => {
     const formData = new FormData();
     formData.append("image", file);
-    return axios.post(`${API_URL}image`, formData);
+    return axios.post(URLS.UPLOAD_IMAGE, formData);
 }
 
-export const getImageStream = (key) => axios.get(`${API_URL}image/${key}`, {responseType: 'arraybuffer'});
+export const getImageStream = (key) => axios.get(URLS.GET_IMAGE.replace('{key}', key), {responseType: 'arraybuffer'});

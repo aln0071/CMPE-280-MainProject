@@ -24,7 +24,7 @@ function EditProfile() {
   const dispatch = useDispatch();
   const hiddenFileInput = React.useRef(null);
   const { isLoggedIn, user } = useSelector((state) => state.auth);
-  const defaultImg = user.imgKey ? `${URLS.API_URL}${URLS.GET_IMAGE.replace('{key}', user.imgKey)}` :
+  const defaultImg = user.imgKey ? URLS.GET_IMAGE.replace('{key}', user.imgKey) :
     'dummy.webp';
   console.log(defaultImg)
 

@@ -42,9 +42,9 @@ export default function BlogList(props) {
                     />
                     <MDBCardBody>
                       <MDBCardTitle>{blog.topic}</MDBCardTitle>
-                      <MDBCardText style={{maxHeight: "15rem", overflow: "hidden"}}>
+                      {/* <MDBCardText style={{maxHeight: "15rem", overflow: "hidden"}}>
                         {blog.description}
-                      </MDBCardText>
+                      </MDBCardText> */}
                     </MDBCardBody>
                   </MDBCard>
                 </MDBCol>

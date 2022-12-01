@@ -22,6 +22,7 @@ import { getImageStream } from '../../services/image.service';
 import { MESSAGE } from '../../actions/messages';
 import { getErrorMessage } from '../../utils/utils';
 import { getBlogsByUser, getBookmarkedBlogs } from '../../services/blog.service';
+import Background from "../Background";
 
 export default function Profile(props) {
   const navigate = useNavigate();
@@ -215,6 +216,8 @@ export default function Profile(props) {
   };
 
   return (displayUser &&
+    <>
+    <Background />
     <div className="gradient-custom-2">
       {console.log(displayUser)}
       <MDBContainer className="py-5 h-100">
@@ -282,5 +285,6 @@ export default function Profile(props) {
         </MDBRow>
       </MDBContainer>
     </div>
+    </>
   );
 }

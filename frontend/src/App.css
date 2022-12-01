@@ -54,6 +54,7 @@
 	font: inherit;
 	cursor: pointer;
 	outline: inherit;
+  width: 3rem !important;
 }
 
 .bookmark-symbol {

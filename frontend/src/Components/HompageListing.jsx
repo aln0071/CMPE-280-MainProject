@@ -35,7 +35,7 @@ function HomepageListing() {
         fontFamily: "fangsong",
         height: "10rem",
           fontSize: "x-large",
-          backgroundColor: "#F6F0F6",
+          backgroundColor: "#BBADBC",
           "hover": {
             background: "#BBADBC"
           },    borderRadius: "77px"}}>

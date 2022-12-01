@@ -1,11 +1,10 @@
 import axios from 'axios';
+import URLS from './urls'
 
-const API_URL = 'http://localhost:3001/';
+export const getBlog = (blogId) => axios.get(URLS.GET_BLOG.replace('{blogId}', blogId));
 
-export const getBlog = (blogId) => axios.get(`${API_URL}getBlog/${blogId}`);
+export const getBlogsByUser = (username) => axios.get(URLS.GET_BLOG_BY_USER.replace('{username}', username))
 
-export const getBlogsByUser = (username) => axios.get(`${API_URL}getRecentBlogs/${username}`)
+export const toggleBookmark = (blogId) => axios.get(URLS.TOGGLE_BOOKMARK.replace('{blogId}', blogId))
 
-export const toggleBookmark = (blogId) => axios.get(`${API_URL}toggleBookmark/${blogId}`)
-
-export const getBookmarkedBlogs = (username) => axios.get(`${API_URL}getBookmarkedBlogs/${username}`)
+export const getBookmarkedBlogs = (username) => axios.get(URLS.GET_BOOKMARKED_BLOGS.replace('{username}', username))

@@ -6,6 +6,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import axios from "axios";
+import URLS from '../services/urls'
 
 function HomepageListing() {
   let navigate = useNavigate();
@@ -13,7 +14,7 @@ function HomepageListing() {
   const[tags,setTags]=useState(["Science","Technology","Travel","Thoughts","Romance"])
 
   useEffect(() => {
-      var api="http://localhost:3001/getAllBlogs"
+      const api=URLS.GET_ALL_BLOGS;
       axios.get(api).then(response => {setblogList(response.data)})
       },[])
 

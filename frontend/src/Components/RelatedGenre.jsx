@@ -7,6 +7,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import axios from "axios";
 import '../App.css';
+import URLS from '../services/urls'
 
 function RelatedGenre() {
   let params = useParams();
@@ -15,15 +16,14 @@ function RelatedGenre() {
   
 
   useEffect(async () => {
-      var api="http://localhost:3001/getAllBlogs"
-      var temp =[]
+      const api=URLS.GET_ALL_BLOGS;
+      const temp =[]
       await axios.get(api).then(response => {
         response.data.map(sing => {
         if(sing.tags.includes(params.tag)){
           temp.push(sing)
         }})})
       setblogList(temp)
-      console.log(params.tag,temp)
       },[params.tag])
 
   return (blogList!=[] && (<div><Background/>   

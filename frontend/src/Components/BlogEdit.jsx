@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { MESSAGE } from "../actions/messages";
 import { getErrorMessage } from "../utils/utils";
 import Badge from 'react-bootstrap/Badge';
+import URLS from '../services/urls'
 
 function BlogEdit(props) {
 
@@ -76,7 +77,7 @@ function BlogEdit(props) {
                 payload.author = user.username;
             }
 
-            const api = "http://localhost:3001/createBlog"
+            const api = URLS.CREATE_BLOG;
             axios.post(api, payload).then(response => {
                 if(response.status === 200) {
                     dispatch(MESSAGE.success("Blog created"));

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import BlogMinimized from "./BlogMinimized";
 import axios from 'axios';
+import URLS from '../services/urls'
 
 function BlogEdit(props) {
 
     const [blogList, setblogList] = useState([]);
     useEffect(() => {
-        var api="http://localhost:3001/getAllBlogs"
+        const api = URLS.GET_ALL_BLOGS;
         axios.get(api).then(response => {setblogList(response.data)})
         },[])
   

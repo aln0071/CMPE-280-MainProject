@@ -8,8 +8,7 @@ import { uploadImage } from "../services/image.service";
 import { useDispatch } from 'react-redux'
 import { MESSAGE } from '../actions/messages';
 import { getErrorMessage } from '../utils/utils';
-
-const API_URL = 'http://localhost:3001/';
+import URLS from '../services/urls'
 
 export default function EditorCustom(props) {
 
@@ -77,7 +76,7 @@ export default function EditorCustom(props) {
     return uploadImage(file)
       .then(response => {
         if(response.status === 200) {
-          return `${API_URL}image/${response.data.key}`;
+          return URLS.GET_IMAGE.replace('{key}', response.data.key);
         } else {
           throw new Error("Status not 200")
         }

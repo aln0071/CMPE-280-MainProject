@@ -25,7 +25,7 @@ export default function TopNavbar({ navRef }) {
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               {/* <Nav.Link href="/#/home">Home</Nav.Link> */}
-              {currentUser && <Nav.Link href="/#/createBlog">Create Blog</Nav.Link>}
+              {<Nav.Link href="/#/createBlog">{currentUser?"Create Blog": "Anonymously Blog"}</Nav.Link>}
               {/* <Nav.Link href="/#/blogListing">Blog Listing</Nav.Link> */}
             </Nav>
             {currentUser && (

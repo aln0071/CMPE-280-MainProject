@@ -38,6 +38,7 @@ export default function Profile(props) {
   const [annonblogs, setAnnonBlogs] = useState(null);
   const [bookmakredBlogs, setBookmarkedBlogs] = useState(null);
   const [followButton, setFollowButton] = useState(true);
+  const [selfBoolean, setSelfBoolean] = useState(false);
   const [followers, setFollowers] = useState(0);
   const [following, setFollowing] = useState(0); 
   const [active, setActive] = useState('main')
@@ -87,6 +88,8 @@ export default function Profile(props) {
 
         console.log("restBlogs",restBlogs)
         console.log("annonBlogs",annonBlogs)
+      //console.log("popll",localStorage.getItem('user'),JSON.parse(localStorage.getItem('user')).username,displayUser.username,JSON.parse(localStorage.getItem('user')).username ==displayUser.username)
+      annonBlogs=localStorage.getItem('user') && JSON.parse(localStorage.getItem('user')).username ==displayUser.username?annonBlogs:[]
       setBlogs(restBlogs);
       setAnnonBlogs(annonBlogs);
     } catch (error) {

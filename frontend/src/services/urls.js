@@ -12,7 +12,7 @@ const urls = {
     TOGGLE_BOOKMARK: `${BASE_URL}toggleBookmark/{blogId}`,
     GET_BOOKMARKED_BLOGS: `${BASE_URL}getBookmarkedBlogs/{username}`,
     GET_COMMENTS: `${BASE_URL}comments/{blogId}`,
-    POST_COMMENTS: `${BASE_URL}comments/{blogId}`,
+    POST_COMMENTS: `${BASE_URL}comment/{blogId}`,
     GET_USER: `${BASE_URL}user/{username}`,
     UPDATE_PROFILE: `${BASE_URL}updateprofile/{userId}`,
     FOLLOW_USER: `${BASE_URL}follow/{userId}/{authorId}`,

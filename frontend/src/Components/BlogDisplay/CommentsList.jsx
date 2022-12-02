@@ -5,7 +5,7 @@ import { getComments } from "../../services/comment.service";
 import { getErrorMessage } from "../../utils/utils";
 import Comment from "./Comment";
 
-export default function CommentsList({ blogId }) {
+export default function CommentsList({ blogId, commentPostNotification }) {
 
     const [commentsList, setCommentsList] = useState([]);
     const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export default function CommentsList({ blogId }) {
             .catch(error => {
                 dispatch(MESSAGE.error(getErrorMessage(error)));
             })
-    }, [])
+    }, [commentPostNotification])
 
     return <div>
         {

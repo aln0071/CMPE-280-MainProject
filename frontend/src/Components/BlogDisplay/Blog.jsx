@@ -33,6 +33,7 @@ function BlogEdit() {
     const { isLoggedIn, user } = useSelector(state => state.auth);
     const [isAnonymous, setIsAnonymous] = useState(false || !isLoggedIn);
     const dispatch = useDispatch()
+    const [commentPostNotification, setCommentPostNotification] = useState(false);
 
     const isBookmarked = isLoggedIn && user.bookmarks.includes(blog._id);
 
@@ -42,6 +43,7 @@ function BlogEdit() {
                 if(response.status === 200) {
                     dispatch(MESSAGE.success(response.data));
                     setComment('');
+                    setCommentPostNotification(!commentPostNotification);
                 } else {
                     throw new Error("Status code not 200");
                 }
@@ -148,7 +150,7 @@ function BlogEdit() {
                                 </Form>
                             </div>
                             <hr />
-                            <CommentsList blogId={params.id} />
+                            <CommentsList blogId={params.id} commentPostNotification={commentPostNotification} />
                         </div>
                     </Card.Footer>}
                 </Card>
